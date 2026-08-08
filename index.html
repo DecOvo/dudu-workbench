@@ -228,16 +228,46 @@ body { max-width: 480px; margin: 0 auto; position: relative; min-height: 100vh; 
 
 .topic-card {
   background: var(--card-bg); border-radius: var(--radius);
-  padding: 16px; margin-bottom: 10px; box-shadow: var(--shadow);
+  margin-bottom: 10px; box-shadow: var(--shadow);
   animation: slideIn 0.4s ease both;
   transition: transform 0.15s;
+  overflow: hidden;
 }
-.topic-card:active { transform: scale(0.98); }
+.topic-card:active { transform: scale(0.99); }
+.topic-card .tc-main { padding: 16px; cursor: pointer; }
 .topic-card .tc-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
 .topic-card .tc-title { font-size: 14px; font-weight: 700; line-height: 1.5; margin-bottom: 6px; }
 .topic-card .tc-angle { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 10px; }
 .topic-card .tc-footer { display: flex; align-items: center; justify-content: space-between; }
 .topic-card .tc-pillar { font-size: 11px; color: var(--text-tertiary); }
+.topic-card .tc-expand-hint { font-size: 11px; color: var(--accent); display: flex; align-items: center; gap: 3px; }
+.topic-card .tc-detail {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.35s ease;
+  border-top: 1px solid transparent;
+}
+.topic-card.expanded .tc-detail {
+  max-height: 800px;
+  border-top: 1px solid var(--border);
+}
+.topic-card .tc-detail-inner { padding: 14px 16px; }
+.topic-card .tc-detail-section { margin-bottom: 14px; }
+.topic-card .tc-detail-section:last-child { margin-bottom: 0; }
+.topic-card .tc-detail-label { font-size: 11px; color: var(--accent); font-weight: 700; margin-bottom: 5px; letter-spacing: 0.5px; }
+.topic-card .tc-detail-text { font-size: 12px; color: var(--text-secondary); line-height: 1.7; }
+.topic-card .tc-detail-text strong { color: var(--text); }
+.topic-card .tc-detail-outline { padding-left: 0; list-style: none; }
+.topic-card .tc-detail-outline li { font-size: 12px; color: var(--text-secondary); line-height: 1.7; padding: 3px 0; padding-left: 18px; position: relative; }
+.topic-card .tc-detail-outline li::before { content: ''; position: absolute; left: 4px; top: 10px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-light); }
+.topic-card .tc-detail-outline li strong { color: var(--text); }
+.tc-actions { display: flex; gap: 8px; margin-top: 12px; }
+.tc-action-btn {
+  flex: 1; padding: 8px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg); color: var(--text-secondary); font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 4px;
+}
+.tc-action-btn:active { transform: scale(0.96); }
+.tc-action-btn.favored { background: var(--accent-bg); color: var(--accent); border-color: var(--accent-light); }
 .fav-btn {
   width: 30px; height: 30px; border: none; border-radius: 50%;
   background: var(--bg); font-size: 14px; cursor: pointer; transition: all 0.2s;
@@ -882,64 +912,64 @@ function switchPage(num) {
 /* ===== 模块2: 选题库 ===== */
 const topicTemplates = {
   1: [ // 效率工具箱
-    { title: '每天少加2小时班：4个Excel技巧让领导以为你效率翻倍', angle: 'VLOOKUP、数据透视表、条件格式、快捷键组合，附操作截图和模板下载', type: 2 },
-    { title: '我用AI每天少干2小时活：5个职场场景直接抄作业', angle: '周报生成、PPT大纲、会议纪要、邮件回复、数据结论，附Prompt模板', type: 4 },
-    { title: '领导要的报表你做了一天？这套自动化流程20分钟搞定', angle: '从数据采集到格式化的全流程自动化方案，附模板', type: 2 },
-    { title: '别再手动整理数据了：3个Excel函数让你准时下班', angle: 'XLOOKUP、SUMIFS、INDEX+MATCH实战场景拆解', type: 2 },
-    { title: '你的PPT为什么总被领导打回？问题出在这5个细节', angle: '对齐、配色、逻辑线、数据呈现、动画使用的常见错误', type: 2 },
-    { title: '用Notion搭建个人工作台：从混乱到有序只要一个周末', angle: '任务管理、知识库、项目跟踪的模板搭建全流程', type: 4 },
-    { title: '同事5分钟做完的图表，你花了两小时？差距在这个工具', angle: '数据可视化工具对比+实操教程', type: 4 },
-    { title: '飞书/钉钉/企微的高阶用法，90%的人不知道', angle: '多维表格、自动化流程、机器人通知的隐藏功能', type: 4 },
-    { title: '一份好的周报长什么样？附3套模板直接套用', angle: '周报结构拆解：成果+数据+反思+计划，附模板', type: 4 },
-    { title: '用AI做竞品分析报告，从3天缩短到3小时', angle: '信息收集、对比框架、结论生成的AI辅助流程', type: 4 },
-    { title: 'Excel数据透视表入门：10分钟学会让领导惊艳的报表', angle: '从拖拽到筛选到计算字段的实战教程', type: 2 },
-    { title: '职场人必备的5个免费AI工具，替代付费软件', angle: '写作、设计、数据分析、PPT、翻译的免费替代方案', type: 4 },
-    { title: '你的邮箱每天100+未读？3步搭建邮件自动化处理系统', angle: '标签分类、自动过滤、模板回复的完整方案', type: 2 },
-    { title: '开会永远没结论？试试这套会议记录模板', angle: '会前准备、会中记录、会后跟进的结构化模板', type: 4 },
-    { title: '一键生成数据分析报告：这个AI工具比Excel强10倍', angle: '数据导入、自动分析、结论生成的全流程演示', type: 4 },
-    { title: '时间管理不是列清单：3个方法让你真正高效', angle: '番茄工作法、时间块、四象限法的实战应用', type: 2 },
-    { title: '用ChatGPT写工作方案，领导以为我花了三天', angle: '需求分析、框架生成、内容填充的Prompt技巧', type: 4 },
-    { title: '文件管理混乱？这套命名规则让你3秒找到任何文件', angle: '文件夹结构+命名规范的完整方案', type: 2 },
+    { title: '每天少加2小时班：4个Excel技巧让领导以为你效率翻倍', angle: '职场人每天大量时间花在重复性数据处理上，但其实几个技巧就能省...', type: 2, painPoint: '职场人每天大量时间花在重复性数据处理上，但其实几个技巧就能省掉大半工作量。', outline: ['<strong>开头</strong>：同事每天加班到9点做报表，我用20分钟做完还能准时下班','<strong>技巧一</strong>：VLOOKUP / XLOOKUP — 两张表匹配数据，员工名单匹配绩效分数','<strong>技巧二</strong>：数据透视表 — 快速汇总分类数据，按部门/月份汇总销售额','<strong>技巧三</strong>：条件格式 — 低于目标值自动标红，领导一眼看到问题','<strong>技巧四</strong>：快捷键组合 — Ctrl+Shift+L筛选、Alt+=求和、F4锁定引用','<strong>结尾</strong>：效率不是天赋，是方法。文末领取Excel模板'] },
+    { title: '我用AI每天少干2小时活：5个职场场景直接抄作业', angle: 'AI已经不是"未来趋势"，而是"现在就能用"的提效工具，但大...', type: 4, painPoint: 'AI已经不是"未来趋势"，而是"现在就能用"的提效工具，但大部分职场人不知道怎么具体用。', outline: ['<strong>开头</strong>：2026年了，还有人用AI只会"帮我写篇文章"','<strong>场景一</strong>：写周报/日报 — Prompt模板，30秒生成结构化周报','<strong>场景二</strong>：做PPT大纲 — 给定主题，AI输出10页大纲+每页要点','<strong>场景三</strong>：会议纪要 — 录音转文字→AI提炼→3分钟出纪要','<strong>场景四</strong>：邮件回复 — 生成3种语气（正式/友好/强硬）的回复','<strong>场景五</strong>：数据报告结论 — AI帮你发现趋势、生成结论','<strong>结尾</strong>：AI不会替代你，但会用AI的人会替代你。文末领取Prompt模板'] },
+    { title: '领导要的报表你做了一天？这套自动化流程20分钟搞定', angle: '领导临时要报表，你从数据采集到排版花了一整天，其实大部分步骤...', type: 2, painPoint: '领导临时要报表，你从数据采集到排版花了一整天，其实大部分步骤可以自动化。', outline: ['<strong>开头</strong>：下午3点领导说"下班前给我这个报表"，你慌了','<strong>步骤一</strong>：数据采集自动化 — Power Query自动拉取数据源','<strong>步骤二</strong>：数据处理模板化 — 预设公式和透视表，一键更新','<strong>步骤三</strong>：格式化自动化 — 条件格式+模板套用','<strong>步骤四</strong>：定时刷新 — 设置自动刷新，下次0秒获取','<strong>结尾</strong>：一次搭建，长期受益。附完整模板下载'] },
+    { title: '别再手动整理数据了：3个Excel函数让你准时下班', angle: '还在用肉眼对比两列数据？还在手动筛选汇总？3个函数搞定。...', type: 2, painPoint: '还在用肉眼对比两列数据？还在手动筛选汇总？3个函数搞定。', outline: ['<strong>开头</strong>：同事用VLOOKUP 5分钟做完的匹配，你肉眼对比了2小时','<strong>函数一</strong>：XLOOKUP — 比VLOOKUP更强大的匹配函数','<strong>函数二</strong>：SUMIFS — 多条件求和，告别手动筛选','<strong>函数三</strong>：INDEX+MATCH — 灵活组合，任意方向查找','<strong>结尾</strong>：掌握这3个函数，每天省1小时。附练习文件'] },
+    { title: '你的PPT为什么总被领导打回？问题出在这5个细节', angle: 'PPT做了3小时，领导看了一眼就说"重做"，你可能踩了这5个...', type: 2, painPoint: 'PPT做了3小时，领导看了一眼就说"重做"，你可能踩了这5个坑。', outline: ['<strong>开头</strong>：领导说"这个PPT再改改"，你已经改了第4版','<strong>细节一</strong>：对齐 — 元素歪歪扭扭，看起来不专业','<strong>细节二</strong>：配色 — 颜色太多太杂，没有统一色调','<strong>细节三</strong>：逻辑线 — 每页之间没有过渡，像碎片拼接','<strong>细节四</strong>：数据呈现 — 表格直接贴上去，没有可视化','<strong>细节五</strong>：动画 — 花哨动画分散注意力，领导觉得不稳重','<strong>结尾</strong>：少即是多。附5套领导认可的PPT模板'] },
+    { title: '用Notion搭建个人工作台：从混乱到有序只要一个周末', angle: '任务记在备忘录、文件存在微信收藏、待办写在便签纸——到处都是...', type: 4, painPoint: '任务记在备忘录、文件存在微信收藏、待办写在便签纸——到处都是，到处找不到。', outline: ['<strong>开头</strong>：你的工作内容散落在5个App里，每天光找文件就花半小时','<strong>模块一</strong>：任务管理 — 看板视图+日历视图','<strong>模块二</strong>：知识库 — 文档分类+标签系统','<strong>模块三</strong>：项目跟踪 — 进度条+里程碑','<strong>模块四</strong>：仪表盘 — 一页总览所有重要信息','<strong>结尾</strong>：一个周末搭建，长期受益。附模板链接'] },
+    { title: '同事5分钟做完的图表，你花了两小时？差距在这个工具', angle: '同样的数据，别人5分钟出图，你调了2小时格式还不满意。...', type: 4, painPoint: '同样的数据，别人5分钟出图，你调了2小时格式还不满意。', outline: ['<strong>开头</strong>：领导要一张数据图表，你用Excel调了2小时','<strong>工具对比</strong>：Excel图表 vs FineBI vs 帆软 vs 在线工具','<strong>推荐方案</strong>：适合职场人的3个免费数据可视化工具','<strong>实操教程</strong>：从数据导入到图表生成的完整步骤','<strong>结尾</strong>：选对工具，效率翻10倍。附工具对比清单'] },
+    { title: '飞书/钉钉/企微的高阶用法，90%的人不知道', angle: '每天都在用飞书/钉钉/企微，但只用了最基础的功能，大量隐藏功...', type: 4, painPoint: '每天都在用飞书/钉钉/企微，但只用了最基础的功能，大量隐藏功能能大幅提效。', outline: ['<strong>开头</strong>：你以为飞书只是聊天工具？这些功能你可能从没点开过','<strong>功能一</strong>：多维表格 — 比Excel更适合团队协作的数据库','<strong>功能二</strong>：自动化流程 — 审批自动流转，不用人工催','<strong>功能三</strong>：机器人通知 — 定时推送数据报表到群聊','<strong>功能四</strong>：文档权限管理 — 精确到段落的权限控制','<strong>结尾</strong>：用好工具，等于多了一个免费助理'] },
+    { title: '一份好的周报长什么样？附3套模板直接套用', angle: '周报写流水账领导不看，写太简单觉得你没干活，到底怎么写？...', type: 4, painPoint: '周报写流水账领导不看，写太简单觉得你没干活，到底怎么写？', outline: ['<strong>开头</strong>：你写的周报，领导3秒就关了','<strong>原则一</strong>：成果先行 — 先写结果，再写过程','<strong>原则二</strong>：数据说话 — 用数字量化你的工作','<strong>原则三</strong>：反思+计划 — 不只是汇报，还有思考','<strong>模板展示</strong>：3套不同风格的周报模板','<strong>结尾</strong>：好周报让领导看见你的价值。附3套模板'] },
+    { title: '用AI做竞品分析报告，从3天缩短到3小时', angle: '竞品分析报告要收集数据、做对比表、写结论，通常要花3天，AI...', type: 4, painPoint: '竞品分析报告要收集数据、做对比表、写结论，通常要花3天，AI能把时间压缩到3小时。', outline: ['<strong>开头</strong>：领导说"做个竞品分析"，你想到要查资料就头疼','<strong>步骤一</strong>：信息收集 — AI帮你快速搜集竞品公开信息','<strong>步骤二</strong>：对比框架 — 用AI生成结构化对比表格','<strong>步骤三</strong>：结论生成 — AI分析优劣势，输出结论建议','<strong>注意</strong>：AI生成的内容需要人工校验，不能直接用','<strong>结尾</strong>：AI是提效工具，不是替代你的思考。附Prompt模板'] },
+    { title: 'Excel数据透视表入门：10分钟学会让领导惊艳的报表', angle: '数据透视表听起来很高大上，其实10分钟就能学会，学会后报表效...', type: 2, painPoint: '数据透视表听起来很高大上，其实10分钟就能学会，学会后报表效率翻倍。', outline: ['<strong>开头</strong>：听到"数据透视表"就头大？其实比你想的简单100倍','<strong>第一步</strong>：数据源准备 — 规范数据格式','<strong>第二步</strong>：创建透视表 — 3步拖拽完成','<strong>第三步</strong>：字段布局 — 行、列、值、筛选','<strong>第四步</strong>：美化报表 — 分组、排序、条件格式','<strong>结尾</strong>：学会透视表，告别手动汇总。附练习数据'] },
+    { title: '职场人必备的5个免费AI工具，替代付费软件', angle: '很多职场人花钱买软件，其实免费的AI工具已经能替代大部分付费...', type: 4, painPoint: '很多职场人花钱买软件，其实免费的AI工具已经能替代大部分付费功能。', outline: ['<strong>开头</strong>：还在花冤枉钱买软件？这5个免费AI工具够用了','<strong>工具一</strong>：写作助手 — 替代付费文案工具','<strong>工具二</strong>：设计工具 — 替代Canva/PS的基础功能','<strong>工具三</strong>：数据分析 — 替代Excel高级功能','<strong>工具四</strong>：PPT制作 — 替代付费PPT模板','<strong>工具五</strong>：翻译工具 — 替代付费翻译软件','<strong>结尾</strong>：省下的钱够吃好几顿火锅了。附工具清单'] },
+    { title: '你的邮箱每天100+未读？3步搭建邮件自动化处理系统', angle: '每天邮箱塞满邮件，重要邮件被淹没，回邮件花掉大量时间。...', type: 2, painPoint: '每天邮箱塞满邮件，重要邮件被淹没，回邮件花掉大量时间。', outline: ['<strong>开头</strong>：打开邮箱看到99+未读，你选择关掉','<strong>第一步</strong>：标签分类 — 按重要程度和类型分类','<strong>第二步</strong>：自动过滤 — 设置规则自动归类','<strong>第三步</strong>：模板回复 — 常见邮件一键回复','<strong>结尾</strong>：收件箱清爽了，效率回来了。附分类规则模板'] },
+    { title: '开会永远没结论？试试这套会议记录模板', angle: '开了1小时的会，会后没人记得结论是什么，谁负责什么也没说清。...', type: 4, painPoint: '开了1小时的会，会后没人记得结论是什么，谁负责什么也没说清。', outline: ['<strong>开头</strong>：开完会大家面面相觑："所以结论是啥？"','<strong>会前</strong>：准备清单 — 议程、参会人、目标','<strong>会中</strong>：记录模板 — 讨论要点、决策、待办','<strong>会后</strong>：跟进表 — 事项、负责人、截止时间','<strong>结尾</strong>：好会议=有结论+有行动。附会议记录模板'] },
+    { title: '一键生成数据分析报告：这个AI工具比Excel强10倍', angle: '领导要一份数据分析报告，你对着Excel发呆不知道从何下手。...', type: 4, painPoint: '领导要一份数据分析报告，你对着Excel发呆不知道从何下手。', outline: ['<strong>开头</strong>：领导说"分析一下这组数据"，你不知道从哪开始','<strong>工具介绍</strong>：AI数据分析工具的功能和优势','<strong>实操演示</strong>：数据导入→自动分析→结论生成的完整流程','<strong>对比</strong>：手动分析 vs AI分析的效率对比','<strong>注意</strong>：敏感数据不要上传，注意数据安全','<strong>结尾</strong>：让AI帮你发现数据中的洞察。附工具链接'] },
+    { title: '时间管理不是列清单：3个方法让你真正高效', angle: '每天列了长长的待办清单，但到下班发现只完成了3项，其余全推迟...', type: 2, painPoint: '每天列了长长的待办清单，但到下班发现只完成了3项，其余全推迟。', outline: ['<strong>开头</strong>：你的待办清单越来越长，完成率却越来越低','<strong>方法一</strong>：番茄工作法 — 25分钟专注+5分钟休息','<strong>方法二</strong>：时间块法 — 把时间切成块，每块只做一件事','<strong>方法三</strong>：四象限法 — 按重要紧急程度排序','<strong>结尾</strong>：高效不是做更多事，是做更重要的事。附时间管理模板'] },
+    { title: '用ChatGPT写工作方案，领导以为我花了三天', angle: '领导要一份工作方案，你对着空白文档发呆，不知道从哪开始写。...', type: 4, painPoint: '领导要一份工作方案，你对着空白文档发呆，不知道从哪开始写。', outline: ['<strong>开头</strong>：领导周五说"下周一给我个方案"，周末全毁了','<strong>步骤一</strong>：需求分析 — 用AI帮你梳理需求要点','<strong>步骤二</strong>：框架生成 — AI输出方案大纲','<strong>步骤三</strong>：内容填充 — 逐段让AI展开细化','<strong>步骤四</strong>：人工润色 — 加入你的判断和数据','<strong>结尾</strong>：AI搭框架，你填灵魂。附方案Prompt模板'] },
+    { title: '文件管理混乱？这套命名规则让你3秒找到任何文件', angle: '找一个文件翻遍桌面、微信收藏、邮箱附件，花10分钟还没找到。...', type: 2, painPoint: '找一个文件翻遍桌面、微信收藏、邮箱附件，花10分钟还没找到。', outline: ['<strong>开头</strong>：领导说"把上个月的报告发我"，你翻了20分钟','<strong>规则一</strong>：文件夹结构 — 按项目/时间分类','<strong>规则二</strong>：命名规范 — 日期+项目+版本号','<strong>规则三</strong>：版本管理 — 不再用"最终版""最终版2"','<strong>规则四</strong>：定期归档 — 每月清理一次','<strong>结尾</strong>：3秒找到任何文件。附命名规则模板'] },
   ],
   2: [ // 认知升级
-    { title: '工作3年还在基层？不是你不够努力，是这3件事没人告诉你', angle: '把忙当有价值、只会干活不会汇报、舒适区待太久', type: 1 },
-    { title: '"领导更喜欢会拍马屁的人"——这是职场最大的误解', angle: '拍马屁vs向上管理的本质区别，3个实操方法', type: 3 },
-    { title: '月薪5千和月薪5万的人，差距到底在哪里？', angle: '不是能力差距，是认知杠杆的差异', type: 3 },
-    { title: '你以为的努力，可能只是低效的勤奋', angle: '区分战术勤奋和战略勤奋，找到高杠杆区', type: 3 },
-    { title: '为什么越听话的员工越不被重视？', angle: '服从≠价值，职场需要的是方案而非执行', type: 3 },
-    { title: '30岁前必须明白的5个职场真相，越早知道越好', angle: '关于选择、平台、人际、学习和健康', type: 1 },
-    { title: '"我很忙"是职场最危险的话', angle: '忙≠重要，忙碌可能意味着你不会管理优先级', type: 3 },
-    { title: '你不是不优秀，是太老实——职场"老实人"的3个困局', angle: '不会拒绝、不会邀功、不会站队的破局方法', type: 1 },
-    { title: '别等领导发现你的才华——学会主动曝光的3个方法', angle: '汇报、分享、跨部门协作中的曝光技巧', type: 3 },
-    { title: '为什么你越努力越焦虑？可能是搞反了因果关系', angle: '焦虑不是因为不够努力，是因为方向不确定', type: 3 },
-    { title: '跳槽涨薪30%的人，和留任涨薪5%的人，差在哪？', angle: '跳槽决策模型：什么时候该走，什么时候该留', type: 3 },
-    { title: '"我只是个执行者"——这句话正在毁掉你的职业', angle: '从执行者到决策者的思维转变路径', type: 3 },
-    { title: '你的工资不取决于你多努力，取决于你的不可替代性', angle: '如何构建个人职场护城河', type: 3 },
-    { title: '职场最大的谎言：是金子总会发光', angle: '金子也需要打磨和展示，被动等待=被遗忘', type: 3 },
-    { title: '35岁危机不是年龄问题，是认知问题', angle: '提前规划职业第二曲线的3个思路', type: 1 },
-    { title: '为什么能力差不多的人，三年后差距这么大？', angle: '平台选择、圈子质量、信息差的叠加效应', type: 3 },
-    { title: '工作前5年，比赚钱更重要的是建立这3种能力', angle: '结构化思维、数据分析、向上沟通', type: 1 },
-    { title: '你以为的稳定，可能是最大的风险', angle: '舒适区的伪装与突破策略', type: 3 },
+    { title: '工作3年还在基层？不是你不够努力，是这3件事没人告诉你', angle: '很多人工作3-5年，活没少干，班没少加，但就是升不上去。问题...', type: 1, painPoint: '很多人工作3-5年，活没少干，班没少加，但就是升不上去。问题不在努力程度，而在方向。', outline: ['<strong>开头</strong>：年终述职，你列了20项工作，领导只问了句"最大的成果是什么？"，你卡壳了','<strong>误区一</strong>：把"忙"当"有价值" — 每天10件事 vs 1件高价值的事','<strong>误区二</strong>：只会干活不会汇报 — 干了100分汇报出来只有30分','<strong>误区三</strong>：舒适区待太久 — 同样的工作做3年，第2年就开始贬值','<strong>结尾</strong>：努力是底线不是天花板，方向对了努力才有杠杆效应'] },
+    { title: '"领导更喜欢会拍马屁的人"——这是职场最大的误解', angle: '很多人觉得职场不公平，会干活的不如会说话的。但真相是：你把"...', type: 3, painPoint: '很多人觉得职场不公平，会干活的不如会说话的。但真相是：你把"向上管理"误解成了"拍马屁"。', outline: ['<strong>开头</strong>：明明自己活干得最多，升职的却是那个天天跟领导混的同事','<strong>误解拆解</strong>：拍马屁 vs 向上管理 — 讨好 vs 合作','<strong>为什么领导"看起来"更喜欢会说话的人</strong> — 信息差+让人安心','<strong>方法一</strong>：主动同步进度，别等领导问','<strong>方法二</strong>：带着方案汇报，别只带问题','<strong>方法三</strong>：在领导关心的方向上发力','<strong>结尾</strong>：与其抱怨不公平，不如学会让努力被看见'] },
+    { title: '月薪5千和月薪5万的人，差距到底在哪里？', angle: '同样工作5年，有人月薪5千有人5万，差距不是努力程度，是认知...', type: 3, painPoint: '同样工作5年，有人月薪5千有人5万，差距不是努力程度，是认知杠杆。', outline: ['<strong>开头</strong>：你和同龄人起点差不多，5年后收入差了10倍','<strong>差距一</strong>：选赛道 — 行业选择比个人努力重要10倍','<strong>差距二</strong>：杠杆率 — 你的劳动能否被放大','<strong>差距三</strong>：信息差 — 你知道别人不知道的机会','<strong>结尾</strong>：收入差距的本质是认知差距。3个思路缩小差距'] },
+    { title: '你以为的努力，可能只是低效的勤奋', angle: '每天加班到最晚，但升职加薪总轮不到你，可能你的"努力"方向错...', type: 3, painPoint: '每天加班到最晚，但升职加薪总轮不到你，可能你的"努力"方向错了。', outline: ['<strong>开头</strong>：你是部门最后一个走的，但绩效排名倒数','<strong>区分</strong>：战术勤奋（做更多事）vs 战略勤奋（做更对的事）','<strong>低效勤奋的3个表现</strong>：重复劳动、不做优先级、不思考复盘','<strong>方法</strong>：找到你的高杠杆区 — 什么事做了能让其他事更简单','<strong>结尾</strong>：别用战术上的勤奋掩盖战略上的懒惰'] },
+    { title: '为什么越听话的员工越不被重视？', angle: '什么都听领导的，从不反对，但领导反而不重视你。...', type: 3, painPoint: '什么都听领导的，从不反对，但领导反而不重视你。', outline: ['<strong>开头</strong>：你从不说不，什么活都接，但升职名单里没有你','<strong>原因一</strong>：听话=没有主见，领导需要的是参谋不是执行机器','<strong>原因二</strong>：从不对抗=没有存在感，沉默=可替代','<strong>原因三</strong>：只执行不思考=没有成长，3年后还是基层','<strong>方法</strong>：学会建设性反对 — 用数据+方案表达不同意见','<strong>结尾</strong>：领导需要的是能解决问题的人，不是只会点头的人'] },
+    { title: '30岁前必须明白的5个职场真相，越早知道越好', angle: '很多职场道理到了30岁才明白，如果25岁就知道，职业发展会完...', type: 1, painPoint: '很多职场道理到了30岁才明白，如果25岁就知道，职业发展会完全不同。', outline: ['<strong>开头</strong>：如果25岁就懂这些，你的职业会完全不同','<strong>真相一</strong>：选择大于努力 — 平台、行业、赛道','<strong>真相二</strong>：人际关系的本质是价值交换','<strong>真相三</strong>：学习不是读公众号，是实操+复盘','<strong>真相四</strong>：健康是最大的职场资本','<strong>真相五</strong>：副业不是必须，但Plan B是','<strong>结尾</strong>：认知决定上限，执行决定下限'] },
+    { title: '"我很忙"是职场最危险的话', angle: '经常说"我很忙"的人，往往不是最重要的那个人。...', type: 3, painPoint: '经常说"我很忙"的人，往往不是最重要的那个人。', outline: ['<strong>开头</strong>：你经常说"我很忙"，但升职的却是那个看起来很闲的人','<strong>原因一</strong>：忙=不会管理优先级 — 什么都做=什么都不重要','<strong>原因二</strong>：忙=可替代性强 — 谁都能忙，不可替代的人不忙','<strong>原因三</strong>：忙=没有思考时间 — 不思考=不成长','<strong>方法</strong>：从"忙"到"高效" — 做减法、做授权、做系统','<strong>结尾</strong>：别炫耀忙碌，该炫耀的是成果'] },
+    { title: '你不是不优秀，是太老实——职场"老实人"的3个困局', angle: '踏实肯干、不争不抢，但职场发展总不如那些"精明"的人。...', type: 1, painPoint: '踏实肯干、不争不抢，但职场发展总不如那些"精明"的人。', outline: ['<strong>开头</strong>：你踏实肯干从不邀功，但年终奖比别人少','<strong>困局一</strong>：不会拒绝 — 别人的活全接，自己的事没时间做','<strong>困局二</strong>：不会邀功 — 干了100分别人以为你只干了50','<strong>困局三</strong>：不会站队 — 中立=没有盟友=被边缘化','<strong>方法</strong>：3个破局策略 — 学会说不、学会展示、学会结盟','<strong>结尾</strong>：老实是优点，但太老实是职场的短板'] },
+    { title: '别等领导发现你的才华——学会主动曝光的3个方法', angle: '默默做了很多事，但领导从不主动发现你，你需要学会曝光。...', type: 3, painPoint: '默默做了很多事，但领导从不主动发现你，你需要学会曝光。', outline: ['<strong>开头</strong>：你以为做好工作就够了？领导根本看不到','<strong>方法一</strong>：日常汇报中的曝光 — 让领导知道你在做什么','<strong>方法二</strong>：分享会上的曝光 — 主动分享你的方法论','<strong>方法三</strong>：跨部门协作中的曝光 — 让更多人认识你','<strong>结尾</strong>：曝光不是炫耀，是让你的价值被看见'] },
+    { title: '为什么你越努力越焦虑？可能是搞反了因果关系', angle: '越努力越焦虑，焦虑了就更拼命努力，陷入恶性循环。...', type: 3, painPoint: '越努力越焦虑，焦虑了就更拼命努力，陷入恶性循环。', outline: ['<strong>开头</strong>：你越忙越焦虑，越焦虑越忙，停不下来','<strong>因果分析</strong>：焦虑不是因为不够努力，是因为方向不确定','<strong>焦虑根源</strong>：看不到反馈、找不到杠杆、不确定方向','<strong>方法</strong>：设定阶段性目标→获取正反馈→调整方向','<strong>结尾</strong>：焦虑的解药不是更努力，是更清晰'] },
+    { title: '跳槽涨薪30%的人，和留任涨薪5%的人，差在哪？', angle: '同一个人，跳槽涨30%留任只涨5%，这个差距合理吗？该怎么选...', type: 3, painPoint: '同一个人，跳槽涨30%留任只涨5%，这个差距合理吗？该怎么选？', outline: ['<strong>开头</strong>：同事跳槽涨了30%，你留任涨了5%，心态崩了','<strong>跳槽逻辑</strong>：外部市场定价 vs 内部调薪机制','<strong>什么时候该走</strong>：天花板低、学不到东西、直属领导差','<strong>什么时候该留</strong>：有成长空间、有好领导、积累不够','<strong>方法</strong>：跳槽决策模型 — 3个维度评估','<strong>结尾</strong>：跳槽不是逃避，是主动选择'] },
+    { title: '"我只是个执行者"——这句话正在毁掉你的职业', angle: '把自己定位为执行者，意味着主动放弃了成长和晋升的机会。...', type: 3, painPoint: '把自己定位为执行者，意味着主动放弃了成长和晋升的机会。', outline: ['<strong>开头</strong>：你说"我就是个执行的"，但3年后你还在执行','<strong>执行者思维</strong>：等指令→执行→交差→等下一个指令','<strong>决策者思维</strong>：理解目标→设计方案→执行→复盘优化','<strong>转变方法</strong>：多问为什么、主动提方案、承担更多','<strong>结尾</strong>：从执行者到决策者，是最大的职业跃迁'] },
+    { title: '你的工资不取决于你多努力，取决于你的不可替代性', angle: '每天加班最晚，但工资不是最高的，因为工资不取决于努力。...', type: 3, painPoint: '每天加班最晚，但工资不是最高的，因为工资不取决于努力。', outline: ['<strong>开头</strong>：你加班最多但工资不是最高，因为工资≠努力程度','<strong>工资公式</strong>：工资 = 不可替代性 × 市场需求','<strong>不可替代性</strong>：专业能力、人脉资源、信息差、信任度','<strong>方法</strong>：构建你的职场护城河 — 3个维度','<strong>结尾</strong>：让自己不可替代，比让自己更努力重要10倍'] },
+    { title: '职场最大的谎言：是金子总会发光', angle: '被动等待被发现，等于主动选择被遗忘。...', type: 3, painPoint: '被动等待被发现，等于主动选择被遗忘。', outline: ['<strong>开头</strong>：你相信"是金子总会发光"，所以默默做事等领导发现','<strong>谎言拆解</strong>：金子也需要打磨和展示，不展示=不存在','<strong>现实</strong>：领导没有义务发现你的才华','<strong>方法</strong>：主动展示 — 汇报、分享、跨部门曝光','<strong>结尾</strong>：金子也需要自己发光，不是等别人来照'] },
+    { title: '35岁危机不是年龄问题，是认知问题', angle: '35岁被裁、35岁找不到工作，这不仅仅是年龄问题。...', type: 1, painPoint: '35岁被裁、35岁找不到工作，这不仅仅是年龄问题。', outline: ['<strong>开头</strong>：35岁=职场危机？不一定，有些人35岁才起飞','<strong>危机本质</strong>：不是年龄大了，是能力没跟上年龄','<strong>3个思路</strong>：深耕专业、转型管理、开辟副业','<strong>提前规划</strong>：30岁开始布局职业第二曲线','<strong>结尾</strong>：35岁危机可以提前5年预防'] },
+    { title: '为什么能力差不多的人，三年后差距这么大？', angle: '起点相同的同事，3年后一个升主管一个还在基层，差距在哪？...', type: 3, painPoint: '起点相同的同事，3年后一个升主管一个还在基层，差距在哪？', outline: ['<strong>开头</strong>：3年前你们一起入职，现在他是你领导','<strong>差距一</strong>：平台选择 — 同样努力，不同平台结果天差地别','<strong>差距二</strong>：圈子质量 — 你接触的人决定你的认知','<strong>差距三</strong>：信息差 — 知道别人不知道的机会','<strong>结尾</strong>：差距是每天微小选择的叠加效应'] },
+    { title: '工作前5年，比赚钱更重要的是建立这3种能力', angle: '前5年只盯着工资看，5年后发现能力没积累，工资也涨不上去。...', type: 1, painPoint: '前5年只盯着工资看，5年后发现能力没积累，工资也涨不上去。', outline: ['<strong>开头</strong>：前5年追着高薪走，5年后发现路越走越窄','<strong>能力一</strong>：结构化思维 — 能把复杂问题拆解清楚','<strong>能力二</strong>：数据分析 — 用数据支撑决策','<strong>能力三</strong>：向上沟通 — 让领导看见你的价值','<strong>结尾</strong>：前5年建能力，后5年能力变现'] },
+    { title: '你以为的稳定，可能是最大的风险', angle: '在一家公司待了5年觉得很稳定，但行业变化可能让你一夜失业。...', type: 3, painPoint: '在一家公司待了5年觉得很稳定，但行业变化可能让你一夜失业。', outline: ['<strong>开头</strong>：你觉得这份工作很稳定，直到公司裁员','<strong>假稳定</strong>：舒适区+重复劳动+没有成长 = 定时炸弹','<strong>真稳定</strong>：可迁移能力+行业人脉+持续学习','<strong>方法</strong>：突破舒适区的3个策略','<strong>结尾</strong>：最大的风险不是变化，是不变'] },
   ],
   3: [ // 人际与沟通
-    { title: '领导给你安排了不属于你的活，高情商的人都是这样拒绝的', angle: '3个原则+4个实战话术模板', type: 5 },
-    { title: '跨部门协作总被推诿？3句话让对方主动配合你', angle: '利益绑定、目标对齐、进度透明的沟通策略', type: 5 },
-    { title: '向领导汇报工作，这3种说法让人最反感', angle: '只说问题不说方案、邀功式汇报、模糊表达', type: 5 },
-    { title: '同事总把活推给你？用这个方法优雅拒绝', angle: '不拒绝人只拒绝事，给替代方案的话术', type: 5 },
-    { title: '职场社交不是讨好：3个原则建立高质量人脉', angle: '价值交换、适度暴露、长期经营', type: 5 },
-    { title: '开会发言总被忽略？学会这3个表达框架', angle: '金字塔原理、PREP模型、STAR法则', type: 5 },
-    { title: '领导问"你觉得呢"，千万别随便回答', angle: '向上沟通的策略：先思考再回答的3层框架', type: 5 },
-    { title: '被同事背后说闲话怎么办？3步化解职场是非', angle: '不 confrontation、事实澄清、关系修复', type: 5 },
-    { title: '和领导意见不合，聪明人都用这个方式沟通', angle: '不直接反对，用数据+方案引导决策', type: 5 },
-    { title: '入职新团队，第一周做对这3件事就能站稳脚跟', angle: '观察文化、建立关系、小步证明', type: 5 },
-    { title: '你发的消息领导总不回？可能是表达方式有问题', angle: '向上沟通的消息模板：结论先行+选项+建议', type: 5 },
-    { title: '职场中，这3种忙绝对不能帮', angle: '替人背锅、越界帮忙、无底线救急', type: 5 },
-    { title: '如何在领导面前刷存在感，又不显得刻意？', angle: '日常汇报、会议发言、问题预判的自然曝光', type: 5 },
-    { title: '同事成了领导，你们的关系该怎么处？', angle: '角色转换、边界感、工作汇报的调整策略', type: 5 },
-    { title: '不讨好不讨好型人格：职场老好人的自救指南', angle: '识别讨好行为、建立边界、学会拒绝', type: 5 },
-    { title: '领导说"你看着办"，到底是几个意思？', angle: '解读领导真实意图的4种场景和应对', type: 5 },
-    { title: '饭局上不会说话？3个万能话题让你不再尴尬', angle: '职场社交场景的破冰和控场技巧', type: 5 },
-    { title: '绩效面谈被领导打了低分，高情商的应对方式', angle: '不争辩不认命，用数据和方案翻盘', type: 5 },
+    { title: '领导给你安排了不属于你的活，高情商的人都是这样拒绝的', angle: '职场最常见的困境——领导塞了不该你干的活，拒绝怕得罪人，接了...', type: 5, painPoint: '职场最常见的困境——领导塞了不该你干的活，拒绝怕得罪人，接了又委屈。', outline: ['<strong>开头</strong>：下午5点领导说"这个方案你帮忙写一下，明天给我"，你嘴上说好的，心里一万个不愿意','<strong>错误做法</strong>：直接拒绝/全盘接受/阴阳怪气','<strong>原则一</strong>：不拒绝"人"，只拒绝"事"','<strong>原则二</strong>：给替代方案，而不是直接说不','<strong>原则三</strong>：让领导做选择题，不是判断题','<strong>话术模板</strong>：4个场景的实战话术','<strong>结尾</strong>：拒绝不是对抗，是帮双方做更合理的资源分配'] },
+    { title: '跨部门协作总被推诿？3句话让对方主动配合你', angle: '跨部门推进项目，对方总是推诿扯皮，进度卡在你这里。...', type: 5, painPoint: '跨部门推进项目，对方总是推诿扯皮，进度卡在你这里。', outline: ['<strong>开头</strong>：你发了5封邮件对方都不配合，项目卡住了','<strong>原因</strong>：你没有给对方一个配合你的理由','<strong>第一句</strong>：利益绑定 — "这个事对你们也有好处"','<strong>第二句</strong>：目标对齐 — "我们的共同目标是XX"','<strong>第三句</strong>：进度透明 — "我这边已完成XX，就等你了"','<strong>结尾</strong>：协作的本质是让对方觉得"值得配合"'] },
+    { title: '向领导汇报工作，这3种说法让人最反感', angle: '同样汇报工作，有人被夸有人被烦，问题可能出在你的表达方式上。...', type: 5, painPoint: '同样汇报工作，有人被夸有人被烦，问题可能出在你的表达方式上。', outline: ['<strong>开头</strong>：你汇报完，领导皱了皱眉说"知道了"','<strong>反感的说法一</strong>：只说问题不说方案 — "领导这有个问题..."','<strong>反感的说法二</strong>：邀功式汇报 — "这个全是我做的..."','<strong>反感的说法三</strong>：模糊表达 — "大概""可能""差不多"','<strong>正确方式</strong>：结论先行+数据支撑+方案建议','<strong>结尾</strong>：汇报不是聊天，是传递价值和信任'] },
+    { title: '同事总把活推给你？用这个方法优雅拒绝', angle: '同事总说"帮个忙"把活推给你，拒绝怕伤关系，不拒绝自己累死。...', type: 5, painPoint: '同事总说"帮个忙"把活推给你，拒绝怕伤关系，不拒绝自己累死。', outline: ['<strong>开头</strong>：同事又说"这个你帮我做一下吧，你做得好"，你又接了','<strong>识别</strong>：3种常见的甩锅话术','<strong>方法</strong>：不拒绝人只拒绝事 — "我帮你看看"→"这个我不熟"','<strong>话术</strong>：4种优雅拒绝的模板','<strong>结尾</strong>：学会拒绝，别人才会尊重你的时间'] },
+    { title: '职场社交不是讨好：3个原则建立高质量人脉', angle: '职场社交不是吃喝应酬，也不是讨好别人，而是建立有价值的关系。...', type: 5, painPoint: '职场社交不是吃喝应酬，也不是讨好别人，而是建立有价值的关系。', outline: ['<strong>开头</strong>：你以为职场社交就是请客吃饭？那太浅了','<strong>原则一</strong>：价值交换 — 你能给对方提供什么','<strong>原则二</strong>：适度暴露 — 展示真实的一面才有深度连接','<strong>原则三</strong>：长期经营 — 人脉不是用时才联系','<strong>结尾</strong>：高质量人脉=价值互换+信任积累'] },
+    { title: '开会发言总被忽略？学会这3个表达框架', angle: '开会时你发言了，但没人接话，你的意见像不存在一样。...', type: 5, painPoint: '开会时你发言了，但没人接话，你的意见像不存在一样。', outline: ['<strong>开头</strong>：你发言完，空气安静了3秒，然后别人继续说','<strong>框架一</strong>：金字塔原理 — 结论先行，论据支撑','<strong>框架二</strong>：PREP模型 — 观点→理由→例子→观点','<strong>框架三</strong>：STAR法则 — 情境→任务→行动→结果','<strong>结尾</strong>：发言有框架，别人才会认真听。附3个框架模板'] },
+    { title: '领导问"你觉得呢"，千万别随便回答', angle: '领导随口一句"你觉得呢"，你随便回答可能踩雷，这句话背后有深...', type: 5, painPoint: '领导随口一句"你觉得呢"，你随便回答可能踩雷，这句话背后有深意。', outline: ['<strong>开头</strong>：领导问"你觉得呢"，你随口说了个想法，领导脸色变了','<strong>解读</strong>：这句话的4种含义 — 真的问意见/测试你/已经决定/暗示你','<strong>3层框架</strong>：先思考→再反问→最后表态','<strong>话术模板</strong>：不同场景下的安全回答','<strong>结尾</strong>：领导的话不能只听表面意思'] },
+    { title: '被同事背后说闲话怎么办？3步化解职场是非', angle: '听说同事在背后说你坏话，心态受影响，不知道该怎么处理。...', type: 5, painPoint: '听说同事在背后说你坏话，心态受影响，不知道该怎么处理。', outline: ['<strong>开头</strong>：你听说有人在背后议论你，心里很不舒服','<strong>第一步</strong>：不正面冲突 — 情绪上头时别做决定','<strong>第二步</strong>：事实澄清 — 找当事人单独聊','<strong>第三步</strong>：关系修复 — 不记仇但保持距离','<strong>结尾</strong>：职场是非不可怕，可怕的是用错误方式处理'] },
+    { title: '和领导意见不合，聪明人都用这个方式沟通', angle: '觉得领导的方向不对，直接反对怕得罪人，不说又觉得憋屈。...', type: 5, painPoint: '觉得领导的方向不对，直接反对怕得罪人，不说又觉得憋屈。', outline: ['<strong>开头</strong>：领导提的方案你觉得有问题，但不敢直接说','<strong>错误方式</strong>：直接反对/沉默接受/私下抱怨','<strong>聪明方式</strong>：用数据+方案引导决策','<strong>话术模板</strong>："领导的思路我理解，我做了一些数据调研..."','<strong>结尾</strong>：不直接反对，但用事实引导'] },
+    { title: '入职新团队，第一周做对这3件事就能站稳脚跟', angle: '刚入职新团队，不知道怎么融入，怕做错事留坏印象。...', type: 5, painPoint: '刚入职新团队，不知道怎么融入，怕做错事留坏印象。', outline: ['<strong>开头</strong>：入职新公司第一周，你紧张得不知道说什么','<strong>第一件事</strong>：观察文化 — 团队的沟通方式和工作节奏','<strong>第二件事</strong>：建立关系 — 主动认识每个人，记住名字','<strong>第三件事</strong>：小步证明 — 先把小事做好，建立信任','<strong>结尾</strong>：第一周定基调，别急着表现，先融入'] },
+    { title: '你发的消息领导总不回？可能是表达方式有问题', angle: '给领导发了消息石沉大海，不知道是太忙还是你的消息有问题。...', type: 5, painPoint: '给领导发了消息石沉大海，不知道是太忙还是你的消息有问题。', outline: ['<strong>开头</strong>：你给领导发了300字的消息，等了一天没回','<strong>问题诊断</strong>：太长/没有结论/没有选项/没有紧急程度','<strong>消息模板</strong>：结论先行+选项+建议+需要确认','<strong>对比示例</strong>：修改前 vs 修改后的消息','<strong>结尾</strong>：领导的时间有限，消息要让他3秒看完。附模板'] },
+    { title: '职场中，这3种忙绝对不能帮', angle: '好心帮人，结果帮出了麻烦，有些忙帮了反而害了自己。...', type: 5, painPoint: '好心帮人，结果帮出了麻烦，有些忙帮了反而害了自己。', outline: ['<strong>开头</strong>：你好心帮同事，结果出了问题他甩锅给你','<strong>不能帮的忙一</strong>：替人背锅 — 出了事你负责','<strong>不能帮的忙二</strong>：越界帮忙 — 不属于你职责范围的事','<strong>不能帮的忙三</strong>：无底线救急 — 别人养成依赖习惯','<strong>结尾</strong>：帮忙要有边界，否则好心办坏事'] },
+    { title: '如何在领导面前刷存在感，又不显得刻意？', angle: '想让领导记住你，但又不想显得太刻意太油腻。...', type: 5, painPoint: '想让领导记住你，但又不想显得太刻意太油腻。', outline: ['<strong>开头</strong>：领导叫不出你的名字，升职时也想不起你','<strong>方法一</strong>：日常汇报中的自然曝光','<strong>方法二</strong>：会议上的有质量发言','<strong>方法三</strong>：提前预判领导的需求','<strong>结尾</strong>：存在感不是刷出来的，是价值展示出来的'] },
+    { title: '同事成了领导，你们的关系该怎么处？', angle: '以前的平级同事升职成了你的领导，关系突然变得尴尬。...', type: 5, painPoint: '以前的平级同事升职成了你的领导，关系突然变得尴尬。', outline: ['<strong>开头</strong>：昨天还一起吐槽领导的同事，今天成了你领导','<strong>调整一</strong>：角色认知 — 从朋友到上下级','<strong>调整二</strong>：边界感 — 工作中保持专业距离','<strong>调整三</strong>：汇报方式 — 不再是分享而是正式汇报','<strong>结尾</strong>：关系变了不等于感情变了，但工作方式要变'] },
+    { title: '不讨好不讨好型人格：职场老好人的自救指南', angle: '不会拒绝、不敢表达不满、总怕别人不开心——讨好型人格在职场特...', type: 5, painPoint: '不会拒绝、不敢表达不满、总怕别人不开心——讨好型人格在职场特别吃亏。', outline: ['<strong>开头</strong>：你从不敢拒绝别人，怕得罪人，但自己累得要死','<strong>识别</strong>：讨好行为的4个典型表现','<strong>根源</strong>：为什么你会成为讨好型人格','<strong>方法一</strong>：建立边界 — 学会说"不"','<strong>方法二</strong>：接受不完美 — 不是所有人都要喜欢你','<strong>结尾</strong>：讨好别人不如尊重自己'] },
+    { title: '领导说"你看着办"，到底是几个意思？', angle: '领导说"你看着办"，到底是信任你还是不在乎你？搞错了就完了。...', type: 5, painPoint: '领导说"你看着办"，到底是信任你还是不在乎你？搞错了就完了。', outline: ['<strong>开头</strong>：领导说"这事你看着办"，你懵了——真让我做主？','<strong>场景一</strong>：真的让你决定 — 小事，领导不想管','<strong>场景二</strong>：测试你的判断 — 看你会怎么做','<strong>场景三</strong>：已经不高兴了 — "你看着办"=自己看着收场','<strong>场景四</strong>：懒得解释 — 你应该知道怎么做','<strong>结尾</strong>：听懂领导的话外之音，比做什么都重要'] },
+    { title: '饭局上不会说话？3个万能话题让你不再尴尬', angle: '职场饭局上不知道说什么，全程低头吃菜，存在感为零。...', type: 5, painPoint: '职场饭局上不知道说什么，全程低头吃菜，存在感为零。', outline: ['<strong>开头</strong>：饭局上你全程低头吃菜，别人聊得热火朝天','<strong>话题一</strong>：最近的行业热点 — 安全且有料','<strong>话题二</strong>：请教对方擅长的领域 — 让对方有表达欲','<strong>话题三</strong>：轻松的生活话题 — 旅行、美食、运动','<strong>结尾</strong>：饭局不是吃饭，是建立关系。附话题清单'] },
+    { title: '绩效面谈被领导打了低分，高情商的应对方式', angle: '绩效面谈被打了低分，当场情绪崩溃或者沉默接受都不对。...', type: 5, painPoint: '绩效面谈被打了低分，当场情绪崩溃或者沉默接受都不对。', outline: ['<strong>开头</strong>：领导说"这次绩效你B-"，你脑子嗡了一下','<strong>错误反应</strong>：当场争辩/沉默接受/私下抱怨','<strong>正确步骤一</strong>：冷静倾听 — 先搞清楚原因','<strong>正确步骤二</strong>：用数据和事实回应 — 不是辩解是讨论','<strong>正确步骤三</strong>：制定改进计划 — 把低分变成成长契机','<strong>结尾</strong>：绩效低分不丢人，不会应对才丢人'] },
   ]
 };
 
@@ -973,31 +1003,69 @@ function getRandomTopics() {
 
 function renderTopics(topics) {
   const container = document.getElementById('topicList');
-  container.innerHTML = topics.map((t, i) => `
-    <div class="topic-card" style="animation-delay:${i * 0.06}s">
-      <div class="tc-header">
-        <span class="tag ${typeTagClass[t.type]}">${typeNames[t.type]}</span>
-        <span class="tag tag-accent" style="font-size:10px;">${pillarNames[t.pillar]}</span>
+  container.innerHTML = topics.map((t, i) => {
+    const outlineHtml = t.outline 
+      ? t.outline.map(item => `<li>${item}</li>`).join('')
+      : `<li>${t.angle}</li>`;
+    const painPoint = t.painPoint || t.angle;
+    return `
+    <div class="topic-card" id="topic-card-${i}" style="animation-delay:${i * 0.06}s">
+      <div class="tc-main" onclick="toggleTopicDetail(${i})">
+        <div class="tc-header">
+          <span class="tag ${typeTagClass[t.type]}">${typeNames[t.type]}</span>
+          <span class="tag tag-accent" style="font-size:10px;">${pillarNames[t.pillar]}</span>
+        </div>
+        <div class="tc-title">${t.title}</div>
+        <div class="tc-angle">${painPoint.length > 40 ? painPoint.substring(0, 40) + '...' : painPoint}</div>
+        <div class="tc-footer">
+          <span class="tc-pillar">建议字数：1800-2500字</span>
+          <span class="tc-expand-hint" id="expand-hint-${i}">查看详情 ▾</span>
+        </div>
       </div>
-      <div class="tc-title">${t.title}</div>
-      <div class="tc-angle">${t.angle}</div>
-      <div class="tc-footer">
-        <span class="tc-pillar">建议字数：1800-2500字</span>
-        <button class="fav-btn" onclick="toggleFav(${i})" data-idx="${i}">☆</button>
+      <div class="tc-detail" id="tc-detail-${i}">
+        <div class="tc-detail-inner">
+          <div class="tc-detail-section">
+            <div class="tc-detail-label">📌 痛点切入</div>
+            <div class="tc-detail-text">${painPoint}</div>
+          </div>
+          <div class="tc-detail-section">
+            <div class="tc-detail-label">📝 写作大纲</div>
+            <ul class="tc-detail-outline">${outlineHtml}</ul>
+          </div>
+          <div class="tc-detail-section">
+            <div class="tc-detail-label">💡 内容支柱</div>
+            <div class="tc-detail-text">${pillarNames[t.pillar]} · ${typeNames[t.type]}型 · 预期1800-2500字</div>
+          </div>
+          <div class="tc-actions">
+            <button class="tc-action-btn" id="fav-btn-${i}" onclick="event.stopPropagation(); toggleFav(${i})">☆ 收藏选题</button>
+          </div>
+        </div>
       </div>
     </div>
-  `).join('');
+  `}).join('');
   // 标记已收藏的
   const saved = getData(STORAGE.saved, []);
   topics.forEach((t, i) => {
     const isFav = saved.some(s => s.title === t.title);
     if (isFav) {
-      const btn = document.querySelector(`.fav-btn[data-idx="${i}"]`);
-      if (btn) { btn.textContent = '★'; btn.classList.add('favored'); }
+      const btn = document.getElementById(`fav-btn-${i}`);
+      if (btn) { btn.textContent = '★ 已收藏'; btn.classList.add('favored'); }
     }
   });
   // 临时存储当前选题
   setData(STORAGE.topics, topics);
+}
+
+function toggleTopicDetail(i) {
+  const card = document.getElementById(`topic-card-${i}`);
+  const hint = document.getElementById(`expand-hint-${i}`);
+  if (card.classList.contains('expanded')) {
+    card.classList.remove('expanded');
+    hint.textContent = '查看详情 ▾';
+  } else {
+    card.classList.add('expanded');
+    hint.textContent = '收起 ▴';
+  }
 }
 
 function generateTopics() {
@@ -1012,14 +1080,14 @@ function toggleFav(idx) {
   if (!topic) return;
   let saved = getData(STORAGE.saved, []);
   const existIdx = saved.findIndex(s => s.title === topic.title);
-  const btn = document.querySelector(`.fav-btn[data-idx="${idx}"]`);
+  const btn = document.getElementById(`fav-btn-${idx}`);
   if (existIdx >= 0) {
     saved.splice(existIdx, 1);
-    if (btn) { btn.textContent = '☆'; btn.classList.remove('favored'); }
+    if (btn) { btn.textContent = '☆ 收藏选题'; btn.classList.remove('favored'); }
     showToast('已取消收藏');
   } else {
-    saved.unshift({ title: topic.title, type: topic.type, pillar: topic.pillar, angle: topic.angle, savedAt: Date.now() });
-    if (btn) { btn.textContent = '★'; btn.classList.add('favored'); }
+    saved.unshift({ title: topic.title, type: topic.type, pillar: topic.pillar, angle: topic.angle, painPoint: topic.painPoint, outline: topic.outline, savedAt: Date.now() });
+    if (btn) { btn.textContent = '★ 已收藏'; btn.classList.add('favored'); }
     showToast('已收藏选题');
   }
   setData(STORAGE.saved, saved);
