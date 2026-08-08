@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="嘟嘟快跑">
+<meta name="theme-color" content="#F5F3F0">
+<meta name="description" content="嘟嘟快跑 - 个人公众号工作台">
+<title>嘟嘟快跑</title>
+<style>
+/* ===== 莫兰迪色系变量 ===== */
+:root {
+  --bg: #F5F3F0;
+  --card-bg: #FFFFFF;
+  --text: #4A4A4A;
+  --text-secondary: #8A8580;
+  --text-tertiary: #B5AFA8;
+  --accent: #7A9E9F;
+  --accent-light: #A8C5C6;
+  --accent-bg: #EAF0F0;
+  --secondary: #B8A99A;
+  --secondary-light: #D4C9BD;
+  --secondary-bg: #F2EDE8;
+  --border: #E8E4DF;
+  --shadow: 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.06);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --tab-bg: rgba(255,255,255,0.92);
+  --danger: #C9A0A0;
+  --success: #7A9E9F;
+  --warning: #B8A99A;
+  --tag-1-bg: #EAF0F0;
+  --tag-1-text: #7A9E9F;
+  --tag-2-bg: #F2EDE8;
+  --tag-2-text: #B8A99A;
+  --tag-3-bg: #EDE8F0;
+  --tag-3-text: #9A8FAA;
+  --tag-4-bg: #F0EAE8;
+  --tag-4-text: #AA8A7A;
+  --tag-5-bg: #E8F0ED;
+  --tag-5-text: #6A8E7A;
+}
+
+[data-theme="dark"] {
+  --bg: #2B2B2B;
+  --card-bg: #363636;
+  --text: #D5D5D5;
+  --text-secondary: #A5A5A5;
+  --text-tertiary: #757575;
+  --accent: #8FB5B6;
+  --accent-light: #6A9596;
+  --accent-bg: #3A4848;
+  --secondary: #C4B5A6;
+  --secondary-light: #8A7D6E;
+  --secondary-bg: #3E3833;
+  --border: #454545;
+  --shadow: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.3);
+  --tab-bg: rgba(54,54,54,0.92);
+  --danger: #B88A8A;
+  --tag-1-bg: #3A4848;
+  --tag-1-text: #8FB5B6;
+  --tag-2-bg: #3E3833;
+  --tag-2-text: #C4B5A6;
+  --tag-3-bg: #3A3640;
+  --tag-3-text: #AA9FBA;
+  --tag-4-bg: #3E3631;
+  --tag-4-text: #BA9A8A;
+  --tag-5-bg: #364039;
+  --tag-5-text: #8AAA9A;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s ease, color 0.3s ease;
+  overscroll-behavior: none;
+}
+
+body { max-width: 480px; margin: 0 auto; position: relative; min-height: 100vh; }
+
+/* ===== 顶部栏 ===== */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px 10px;
+  padding-top: calc(14px + env(safe-area-inset-top));
+  background: var(--bg);
+  transition: background 0.3s ease;
+}
+.header-title { font-size: 19px; font-weight: 700; letter-spacing: 0.5px; }
+.header-sub { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+.theme-btn {
+  width: 36px; height: 36px; border: none; border-radius: 50%;
+  background: var(--card-bg); color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; cursor: pointer; box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+}
+.theme-btn:active { transform: scale(0.9); }
+
+/* ===== 页面容器 ===== */
+.pages-wrapper { padding-bottom: 90px; }
+
+.page { display: none; padding: 6px 16px 20px; animation: fadeIn 0.35s ease; }
+.page.active { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideIn { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ===== 卡片 ===== */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 18px 16px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  transition: background 0.3s ease, box-shadow 0.2s ease;
+}
+.card-title {
+  font-size: 15px; font-weight: 700; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 6px;
+}
+.card-title .icon { font-size: 16px; }
+
+/* ===== 标签 ===== */
+.tag {
+  display: inline-block; padding: 3px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; white-space: nowrap;
+}
+.tag-1 { background: var(--tag-1-bg); color: var(--tag-1-text); }
+.tag-2 { background: var(--tag-2-bg); color: var(--tag-2-text); }
+.tag-3 { background: var(--tag-3-bg); color: var(--tag-3-text); }
+.tag-4 { background: var(--tag-4-bg); color: var(--tag-4-text); }
+.tag-5 { background: var(--tag-5-bg); color: var(--tag-5-text); }
+.tag-accent { background: var(--accent-bg); color: var(--accent); }
+
+/* ===== 模块1: 规划与方向 ===== */
+.positioning-formula {
+  background: var(--accent-bg); border-radius: var(--radius-sm);
+  padding: 16px 14px; margin-bottom: 12px;
+}
+.positioning-formula .label { font-size: 11px; color: var(--accent); font-weight: 700; margin-bottom: 6px; letter-spacing: 1px; }
+.positioning-formula .text { font-size: 14px; line-height: 1.7; color: var(--text); }
+.positioning-formula .text strong { color: var(--accent); }
+
+.signature {
+  font-size: 14px; color: var(--text-secondary); font-style: italic;
+  padding: 10px 0 4px; line-height: 1.6;
+  border-left: 3px solid var(--accent); padding-left: 12px; margin: 8px 0;
+}
+
+.keyword-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.keyword-item {
+  background: var(--bg); border-radius: var(--radius-sm); padding: 10px 12px;
+}
+.keyword-item .kw { font-size: 13px; font-weight: 700; color: var(--accent); margin-bottom: 3px; }
+.keyword-item .desc { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
+
+.info-row { display: flex; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.info-row:last-child { border-bottom: none; }
+.info-row .label { color: var(--text-secondary); min-width: 70px; flex-shrink: 0; }
+.info-row .value { color: var(--text); flex: 1; }
+
+.pillar-bar { margin-bottom: 14px; }
+.pillar-bar:last-child { margin-bottom: 0; }
+.pillar-bar .pb-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.pillar-bar .pb-name { font-size: 13px; font-weight: 600; }
+.pillar-bar .pb-pct { font-size: 12px; color: var(--accent); font-weight: 700; }
+.pillar-bar .pb-track { height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+.pillar-bar .pb-fill { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
+.pillar-bar .pb-desc { font-size: 11px; color: var(--text-tertiary); margin-top: 4px; }
+
+.compare-table { width: 100%; font-size: 12px; }
+.compare-table tr { border-bottom: 1px solid var(--border); }
+.compare-table tr:last-child { border-bottom: none; }
+.compare-table td { padding: 8px 4px; line-height: 1.5; vertical-align: top; }
+.compare-table td:first-child { color: var(--danger); width: 45%; }
+.compare-table td:last-child { color: var(--accent); }
+.compare-table td .arrow { display: inline-block; margin: 0 4px; color: var(--text-tertiary); }
+
+.structure-flow { display: flex; flex-direction: column; gap: 6px; }
+.flow-step {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; background: var(--bg); border-radius: var(--radius-sm);
+}
+.flow-step .step-num {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: white;
+}
+.flow-step .step-content { flex: 1; }
+.flow-step .step-title { font-size: 12px; font-weight: 600; }
+.flow-step .step-desc { font-size: 11px; color: var(--text-tertiary); }
+.flow-arrow { text-align: center; font-size: 14px; color: var(--text-tertiary); line-height: 1; }
+
+.phase-table { width: 100%; font-size: 12px; }
+.phase-table th { text-align: left; padding: 6px 4px; color: var(--text-tertiary); font-weight: 600; border-bottom: 1px solid var(--border); }
+.phase-table td { padding: 8px 4px; border-bottom: 1px solid var(--border); }
+.phase-table tr:last-child td { border-bottom: none; }
+
+/* ===== 模块2: 选题库 ===== */
+.topic-section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.topic-section-header h3 { font-size: 15px; font-weight: 700; }
+.refresh-btn {
+  display: flex; align-items: center; gap: 4px;
+  padding: 7px 14px; border: none; border-radius: 20px;
+  background: var(--accent); color: white; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+}
+.refresh-btn:active { transform: scale(0.95); opacity: 0.85; }
+
+.topic-card {
+  background: var(--card-bg); border-radius: var(--radius);
+  padding: 16px; margin-bottom: 10px; box-shadow: var(--shadow);
+  animation: slideIn 0.4s ease both;
+  transition: transform 0.15s;
+}
+.topic-card:active { transform: scale(0.98); }
+.topic-card .tc-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.topic-card .tc-title { font-size: 14px; font-weight: 700; line-height: 1.5; margin-bottom: 6px; }
+.topic-card .tc-angle { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 10px; }
+.topic-card .tc-footer { display: flex; align-items: center; justify-content: space-between; }
+.topic-card .tc-pillar { font-size: 11px; color: var(--text-tertiary); }
+.fav-btn {
+  width: 30px; height: 30px; border: none; border-radius: 50%;
+  background: var(--bg); font-size: 14px; cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.fav-btn.favored { background: var(--accent-bg); }
+.fav-btn:active { transform: scale(0.85); }
+
+.saved-section { margin-top: 20px; }
+.saved-section .ss-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
+}
+.saved-section .ss-title { font-size: 14px; font-weight: 700; }
+.saved-section .ss-count { font-size: 12px; color: var(--text-tertiary); }
+.saved-card {
+  background: var(--card-bg); border-radius: var(--radius-sm);
+  padding: 12px 14px; margin-bottom: 8px; box-shadow: var(--shadow);
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.saved-card .sc-info { flex: 1; min-width: 0; }
+.saved-card .sc-title { font-size: 13px; font-weight: 600; line-height: 1.4; margin-bottom: 4px; }
+.saved-card .sc-tags { display: flex; gap: 6px; }
+.saved-card .sc-delete {
+  width: 28px; height: 28px; border: none; border-radius: 50%;
+  background: transparent; color: var(--text-tertiary); font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.saved-card .sc-delete:active { color: var(--danger); }
+
+.preset-card {
+  background: var(--secondary-bg); border-radius: var(--radius-sm);
+  padding: 12px 14px; margin-bottom: 8px;
+}
+.preset-card .pc-num { font-size: 11px; color: var(--secondary); font-weight: 700; margin-bottom: 4px; }
+.preset-card .pc-title { font-size: 13px; font-weight: 600; line-height: 1.4; margin-bottom: 4px; }
+.preset-card .pc-meta { font-size: 11px; color: var(--text-tertiary); }
+
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text-tertiary); font-size: 13px; }
+
+/* ===== 模块3: 数据分析 ===== */
+.data-account {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+  font-size: 13px; color: var(--text-secondary);
+}
+.data-account .da-tag {
+  background: var(--accent-bg); color: var(--accent);
+  padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+}
+
+.metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.metric-card {
+  background: var(--card-bg); border-radius: var(--radius-sm); padding: 14px 12px;
+  box-shadow: var(--shadow); position: relative;
+}
+.metric-card .mc-label { font-size: 11px; color: var(--text-tertiary); margin-bottom: 4px; }
+.metric-card .mc-value { font-size: 22px; font-weight: 700; color: var(--text); }
+.metric-card .mc-change { font-size: 11px; margin-top: 4px; }
+.metric-card .mc-change.up { color: var(--accent); }
+.metric-card .mc-change.down { color: var(--danger); }
+.metric-card .mc-change.flat { color: var(--text-tertiary); }
+
+.demo-badge {
+  position: absolute; top: 8px; right: 8px;
+  font-size: 9px; padding: 2px 6px; border-radius: 10px;
+  background: var(--secondary-bg); color: var(--secondary); font-weight: 600;
+}
+
+.chart-container {
+  background: var(--card-bg); border-radius: var(--radius); padding: 16px;
+  margin-bottom: 12px; box-shadow: var(--shadow);
+}
+.chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.chart-header h4 { font-size: 14px; font-weight: 700; }
+.chart-toggle { display: flex; gap: 4px; }
+.chart-toggle button {
+  padding: 4px 10px; border: none; border-radius: 14px;
+  font-size: 11px; cursor: pointer; transition: all 0.2s;
+  background: var(--bg); color: var(--text-secondary);
+}
+.chart-toggle button.active { background: var(--accent); color: white; }
+
+svg.chart-svg { width: 100%; height: 140px; display: block; }
+
+/* 数据录入表单 */
+.form-group { margin-bottom: 12px; }
+.form-group label { display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; font-weight: 600; }
+.form-group input, .form-group select {
+  width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+  font-size: 14px; color: var(--text); background: var(--card-bg); transition: border 0.2s;
+}
+.form-group input:focus, .form-group select:focus { outline: none; border-color: var(--accent); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.submit-btn {
+  width: 100%; padding: 12px; border: none; border-radius: var(--radius-sm);
+  background: var(--accent); color: white; font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: all 0.2s; margin-top: 6px;
+}
+.submit-btn:active { transform: scale(0.97); opacity: 0.9; }
+
+/* 数据表格 */
+.data-table { width: 100%; font-size: 12px; }
+.data-table th { text-align: left; padding: 6px 4px; color: var(--text-tertiary); font-weight: 600; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.data-table td { padding: 8px 4px; border-bottom: 1px solid var(--border); }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table .del-btn {
+  border: none; background: transparent; color: var(--text-tertiary); cursor: pointer; font-size: 14px;
+}
+.data-table .del-btn:active { color: var(--danger); }
+
+/* ===== 模块4: 发布日历 ===== */
+.calendar-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.calendar-nav button {
+  width: 32px; height: 32px; border: none; border-radius: 50%;
+  background: var(--card-bg); color: var(--text-secondary); font-size: 16px; cursor: pointer;
+  box-shadow: var(--shadow); transition: all 0.2s;
+}
+.calendar-nav button:active { transform: scale(0.9); }
+.calendar-nav .cal-title { font-size: 16px; font-weight: 700; }
+
+.calendar-stats { display: flex; gap: 8px; margin-bottom: 14px; }
+.cal-stat {
+  flex: 1; background: var(--card-bg); border-radius: var(--radius-sm); padding: 12px;
+  text-align: center; box-shadow: var(--shadow);
+}
+.cal-stat .cs-value { font-size: 20px; font-weight: 700; }
+.cal-stat .cs-value.green { color: var(--accent); }
+.cal-stat .cs-value.brown { color: var(--secondary); }
+.cal-stat .cs-label { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+
+.calendar-grid { background: var(--card-bg); border-radius: var(--radius); padding: 12px; box-shadow: var(--shadow); margin-bottom: 14px; }
+.cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 6px; }
+.cal-weekdays div { text-align: center; font-size: 11px; color: var(--text-tertiary); font-weight: 600; padding: 4px 0; }
+.cal-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.cal-day {
+  aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  border-radius: var(--radius-sm); font-size: 13px; cursor: pointer; position: relative;
+  transition: background 0.15s; min-height: 40px;
+}
+.cal-day:active { transform: scale(0.92); }
+.cal-day.other-month { color: var(--text-tertiary); opacity: 0.4; }
+.cal-day.today { background: var(--accent-bg); font-weight: 700; }
+.cal-day .dot {
+  width: 5px; height: 5px; border-radius: 50%; margin-top: 2px;
+}
+.cal-day .dot.published { background: var(--accent); }
+.cal-day .dot.planned { background: var(--secondary); }
+.cal-day .day-num { font-size: 12px; }
+
+.publish-legend { display: flex; gap: 16px; justify-content: center; margin-bottom: 14px; font-size: 11px; color: var(--text-secondary); }
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+.legend-dot.green { background: var(--accent); }
+.legend-dot.brown { background: var(--secondary); }
+
+/* 发布记录 */
+.publish-record { background: var(--card-bg); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 8px; box-shadow: var(--shadow); }
+.publish-record .pr-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.publish-record .pr-date { font-size: 12px; color: var(--text-tertiary); }
+.publish-record .pr-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.publish-record .pr-link { font-size: 11px; color: var(--accent); word-break: break-all; }
+.publish-record .pr-note { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+.publish-record .pr-delete { border: none; background: transparent; color: var(--text-tertiary); font-size: 14px; cursor: pointer; }
+
+/* 模态框 */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.4); z-index: 200;
+  display: none; align-items: flex-end; justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--card-bg); border-radius: 20px 20px 0 0;
+  width: 100%; max-width: 480px; padding: 20px 16px calc(20px + env(safe-area-inset-bottom));
+  animation: slideUp 0.3s ease;
+  max-height: 85vh; overflow-y: auto;
+}
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.modal-header h3 { font-size: 16px; font-weight: 700; }
+.modal-close {
+  width: 30px; height: 30px; border: none; border-radius: 50%;
+  background: var(--bg); color: var(--text-secondary); font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ===== 底部导航 ===== */
+.tab-bar {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 480px;
+  display: flex; background: var(--tab-bg);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 99;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+.tab-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 8px 0 6px; cursor: pointer; transition: all 0.2s;
+  border: none; background: transparent;
+}
+.tab-item .tab-icon { font-size: 20px; transition: transform 0.2s; }
+.tab-item .tab-label { font-size: 10px; color: var(--text-tertiary); font-weight: 500; }
+.tab-item.active .tab-icon { transform: translateY(-2px); }
+.tab-item.active .tab-label { color: var(--accent); font-weight: 700; }
+.tab-item:active .tab-icon { transform: scale(0.85); }
+
+/* ===== Toast ===== */
+.toast {
+  position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%);
+  background: rgba(0,0,0,0.75); color: white; padding: 10px 20px;
+  border-radius: 20px; font-size: 13px; z-index: 300;
+  opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; }
+
+/* ===== 工具类 ===== */
+.text-accent { color: var(--accent); }
+.text-secondary { color: var(--text-secondary); }
+.text-sm { font-size: 12px; }
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mb-8 { margin-bottom: 8px; }
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- ===== 顶部栏 ===== -->
+<div class="header">
+  <div>
+    <div class="header-title" id="pageTitle">规划与方向</div>
+    <div class="header-sub" id="pageSub">嘟嘟快跑 · 职场成长赛道</div>
+  </div>
+  <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<!-- ===== 页面内容 ===== -->
+<div class="pages-wrapper">
+
+<!-- ========== 模块1: 规划与方向 ========== -->
+<div class="page active" id="page-1">
+
+  <!-- 账号定位 -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🎯</span> 账号定位</div>
+    <div class="positioning-formula">
+      <div class="label">定位公式</div>
+      <div class="text">帮助<strong>【0-5年职场人】</strong>，通过<strong>【可落地的方法论+真实踩坑经验】</strong>，解决<strong>【工作低效&成长停滞】</strong>的问题</div>
+    </div>
+    <div class="signature">「工作5年踩过的坑，写成你能直接用的方法。不灌鸡汤，只讲干货。」</div>
+  </div>
+
+  <!-- 人设关键词 -->
+  <div class="card">
+    <div class="card-title"><span class="icon">👤</span> 人设关键词</div>
+    <div class="keyword-grid">
+      <div class="keyword-item"><div class="kw">真实</div><div class="desc">分享踩过的坑，不装完美人设</div></div>
+      <div class="keyword-item"><div class="kw">落地</div><div class="desc">每篇必须有一个"今天就能用"的方法</div></div>
+      <div class="keyword-item"><div class="kw">锐利</div><div class="desc">观点鲜明，不说正确的废话</div></div>
+      <div class="keyword-item"><div class="kw">陪伴感</div><div class="desc">"我走过的弯路，你不用再走"</div></div>
+    </div>
+  </div>
+
+  <!-- 目标用户 -->
+  <div class="card">
+    <div class="card-title"><span class="icon">👥</span> 目标用户画像</div>
+    <div class="info-row"><span class="label">年龄</span><span class="value">23-30岁</span></div>
+    <div class="info-row"><span class="label">职业阶段</span><span class="value">职场0-5年，基层到基层管理</span></div>
+    <div class="info-row"><span class="label">痛点</span><span class="value">效率低被催、不会汇报、跨部门沟通难、工资涨不上去</span></div>
+    <div class="info-row"><span class="label">阅读场景</span><span class="value">通勤地铁、午休、睡前</span></div>
+    <div class="info-row"><span class="label">内容偏好</span><span class="value">1500-2500字、结构清晰、有案例有模板</span></div>
+  </div>
+
+  <!-- 内容支柱 -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📊</span> 内容支柱</div>
+    <div class="pillar-bar">
+      <div class="pb-header"><span class="pb-name">🔧 效率工具箱</span><span class="pb-pct">40%</span></div>
+      <div class="pb-track"><div class="pb-fill" style="width:40%;background:var(--accent)"></div></div>
+      <div class="pb-desc">工具、模板、方法论 · Excel技巧、AI提效、时间管理</div>
+    </div>
+    <div class="pillar-bar">
+      <div class="pb-header"><span class="pb-name">🧠 认知升级</span><span class="pb-pct">35%</span></div>
+      <div class="pb-track"><div class="pb-fill" style="width:35%;background:var(--secondary)"></div></div>
+      <div class="pb-desc">打破认知误区 · "努力≠被看见"、"汇报比干活更重要"</div>
+    </div>
+    <div class="pillar-bar">
+      <div class="pb-header"><span class="pb-name">🤝 人际与沟通</span><span class="pb-pct">25%</span></div>
+      <div class="pb-track"><div class="pb-fill" style="width:25%;background:#9A8FAA"></div></div>
+      <div class="pb-desc">向上管理、跨部门协作 · 如何拒绝、如何要资源</div>
+    </div>
+  </div>
+
+  <!-- 差异化策略 -->
+  <div class="card">
+    <div class="card-title"><span class="icon">💡</span> 差异化策略</div>
+    <table class="compare-table">
+      <tr><td>全是"道理"没有"方法"</td><td>→</td><td>每篇给具体模板/话术/步骤</td></tr>
+      <tr><td>用名人案例，离读者太远</td><td>→</td><td>用日常职场场景</td></tr>
+      <tr><td>标题党，正文空洞</td><td>→</td><td>标题吸引，内容超预期</td></tr>
+      <tr><td>AI味重，套话连篇</td><td>→</td><td>加入真实踩坑经历</td></tr>
+    </table>
+  </div>
+
+  <!-- 内容结构模板 -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📝</span> 内容结构模板</div>
+    <div class="structure-flow">
+      <div class="flow-step"><div class="step-num" style="background:var(--accent)">1</div><div class="step-content"><div class="step-title">开头 · 戳痛点</div><div class="step-desc">1句话，50字以内</div></div></div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step"><div class="step-num" style="background:var(--secondary)">2</div><div class="step-content"><div class="step-title">分析 · 讲本质</div><div class="step-desc">为什么会这样？300字</div></div></div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step"><div class="step-num" style="background:#9A8FAA">3</div><div class="step-content"><div class="step-title">方法 · 3个方案</div><div class="step-desc">可落地，每个配案例，1200字</div></div></div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step"><div class="step-num" style="background:#AA8A7A">4</div><div class="step-content"><div class="step-title">模板 · 可复用</div><div class="step-desc">话术/清单/模板，200字</div></div></div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step"><div class="step-num" style="background:#6A8E7A">5</div><div class="step-content"><div class="step-title">结尾 · 总结+互动</div><div class="step-desc">1句话总结 + 引导，50字</div></div></div>
+    </div>
+    <div class="text-sm text-secondary mt-12" style="text-align:center;">全文 1800-2500字 · 阅读时长 5-8分钟</div>
+  </div>
+
+  <!-- 运营节奏 -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📅</span> 运营节奏</div>
+    <div style="margin-bottom:14px;">
+      <div class="text-sm" style="font-weight:700;margin-bottom:6px;color:var(--accent);">更新频率</div>
+      <table class="phase-table">
+        <tr><th>阶段</th><th>频率</th><th>说明</th></tr>
+        <tr><td>起步期（前2月）</td><td>每周2篇</td><td>快速积累，测试选题</td></tr>
+        <tr><td>稳定期（3月+）</td><td>每周1-2篇</td><td>质量优先，稳定更新</td></tr>
+      </table>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div class="text-sm" style="font-weight:700;margin-bottom:6px;color:var(--accent);">涨粉策略</div>
+      <div class="info-row"><span class="label">关键词SEO</span><span class="value">标题含"职场""Excel""AI""汇报"</span></div>
+      <div class="info-row"><span class="label">互动钩子</span><span class="value">文末"回复关键词领取模板"</span></div>
+      <div class="info-row"><span class="label">社交裂变</span><span class="value">争议/共鸣型内容鼓励转发</span></div>
+      <div class="info-row"><span class="label">跨平台</span><span class="value">知乎答题 + 小红书金句卡片</span></div>
+    </div>
+    <div>
+      <div class="text-sm" style="font-weight:700;margin-bottom:6px;color:var(--accent);">变现路径</div>
+      <table class="phase-table">
+        <tr><th>阶段</th><th>粉丝量</th><th>变现方式</th></tr>
+        <tr><td>起步</td><td>0-500</td><td>开通流量主</td></tr>
+        <tr><td>成长</td><td>500-5000</td><td>流量主 + 模板/资料付费</td></tr>
+        <tr><td>成熟</td><td>5000+</td><td>商单 + 课程 + 社群</td></tr>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ========== 模块2: 选题库 ========== -->
+<div class="page" id="page-2">
+  <div class="topic-section-header">
+    <h3>🔥 今日推荐选题</h3>
+    <button class="refresh-btn" onclick="generateTopics()">↻ 换一批</button>
+  </div>
+  <div id="topicList"></div>
+
+  <div class="saved-section">
+    <div class="ss-header">
+      <span class="ss-title">⭐ 已收藏选题</span>
+      <span class="ss-count" id="savedCount">0 篇</span>
+    </div>
+    <div id="savedList"></div>
+  </div>
+
+  <div class="saved-section">
+    <div class="ss-header">
+      <span class="ss-title">📋 预置选题规划</span>
+      <span class="ss-count">5 篇</span>
+    </div>
+    <div id="presetList"></div>
+  </div>
+</div>
+
+<!-- ========== 模块3: 数据分析 ========== -->
+<div class="page" id="page-3">
+  <div class="data-account">
+    <span class="da-tag">关联公众号</span>
+    <span>不吃鸭梨Caro_</span>
+  </div>
+
+  <!-- 核心指标 -->
+  <div class="metric-grid">
+    <div class="metric-card">
+      <span class="demo-badge">示例</span>
+      <div class="mc-label">阅读量</div>
+      <div class="mc-value" id="metricReads">3,241</div>
+      <div class="mc-change up" id="metricReadsChange">↑ 12.3% 较昨日</div>
+    </div>
+    <div class="metric-card">
+      <span class="demo-badge">示例</span>
+      <div class="mc-label">新增粉丝</div>
+      <div class="mc-value" id="metricFans">+27</div>
+      <div class="mc-change up" id="metricFansChange">↑ 8.1% 较昨日</div>
+    </div>
+    <div class="metric-card">
+      <span class="demo-badge">示例</span>
+      <div class="mc-label">点赞数</div>
+      <div class="mc-value" id="metricLikes">156</div>
+      <div class="mc-change down" id="metricLikesChange">↓ 3.2% 较昨日</div>
+    </div>
+    <div class="metric-card">
+      <span class="demo-badge">示例</span>
+      <div class="mc-label">转发数</div>
+      <div class="mc-value" id="metricShares">43</div>
+      <div class="mc-change up" id="metricSharesChange">↑ 5.7% 较昨日</div>
+    </div>
+  </div>
+
+  <!-- 趋势图 -->
+  <div class="chart-container">
+    <div class="chart-header">
+      <h4>📈 阅读量趋势</h4>
+      <div class="chart-toggle">
+        <button class="active" onclick="switchChart(this, 7)">7天</button>
+        <button onclick="switchChart(this, 30)">30天</button>
+      </div>
+    </div>
+    <svg class="chart-svg" id="trendChart" viewBox="0 0 320 140"></svg>
+  </div>
+
+  <!-- 数据录入 -->
+  <div class="card">
+    <div class="card-title"><span class="icon">✏️</span> 录入今日数据</div>
+    <div class="form-group">
+      <label>日期</label>
+      <input type="date" id="dataDate">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>阅读量</label>
+        <input type="number" id="dataReads" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label>点赞数</label>
+        <input type="number" id="dataLikes" placeholder="0">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>转发数</label>
+        <input type="number" id="dataShares" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label>评论数</label>
+        <input type="number" id="dataComments" placeholder="0">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>新增粉丝</label>
+        <input type="number" id="dataNewFans" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label>总粉丝数</label>
+        <input type="number" id="dataTotalFans" placeholder="0">
+      </div>
+    </div>
+    <button class="submit-btn" onclick="addDataRecord()">保存数据</button>
+  </div>
+
+  <!-- 历史数据 -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📋</span> 历史数据</div>
+    <div style="overflow-x:auto;">
+      <table class="data-table" id="dataTable">
+        <thead>
+          <tr><th>日期</th><th>阅读</th><th>点赞</th><th>转发</th><th>新增粉</th><th></th></tr>
+        </thead>
+        <tbody id="dataTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 模块4: 发布日历 ========== -->
+<div class="page" id="page-4">
+  <div class="data-account">
+    <span class="da-tag">关联公众号</span>
+    <span>不吃鸭梨Caro_</span>
+  </div>
+
+  <!-- 统计 -->
+  <div class="calendar-stats">
+    <div class="cal-stat">
+      <div class="cs-value green" id="monthPublished">0</div>
+      <div class="cs-label">本月已发布</div>
+    </div>
+    <div class="cal-stat">
+      <div class="cs-value brown" id="monthPlanned">0</div>
+      <div class="cs-label">计划发布</div>
+    </div>
+    <div class="cal-stat">
+      <div class="cs-value" id="totalPublished">0</div>
+      <div class="cs-label">累计发布</div>
+    </div>
+  </div>
+
+  <!-- 日历 -->
+  <div class="calendar-nav">
+    <button onclick="changeMonth(-1)">‹</button>
+    <span class="cal-title" id="calTitle">2026年8月</span>
+    <button onclick="changeMonth(1)">›</button>
+  </div>
+
+  <div class="calendar-grid">
+    <div class="cal-weekdays">
+      <div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div>
+    </div>
+    <div class="cal-days" id="calDays"></div>
+  </div>
+
+  <div class="publish-legend">
+    <div class="legend-item"><div class="legend-dot green"></div>已发布</div>
+    <div class="legend-item"><div class="legend-dot brown"></div>计划发布</div>
+  </div>
+
+  <!-- 发布记录列表 -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📄</span> 发布记录</div>
+    <div id="publishList"></div>
+    <div class="empty-state hidden" id="publishEmpty">暂无发布记录，点击日历日期添加</div>
+  </div>
+</div>
+
+</div>
+
+<!-- ===== 底部导航 ===== -->
+<div class="tab-bar">
+  <button class="tab-item active" onclick="switchPage(1)">
+    <span class="tab-icon">🧭</span><span class="tab-label">规划</span>
+  </button>
+  <button class="tab-item" onclick="switchPage(2)">
+    <span class="tab-icon">💡</span><span class="tab-label">选题</span>
+  </button>
+  <button class="tab-item" onclick="switchPage(3)">
+    <span class="tab-icon">📊</span><span class="tab-label">数据</span>
+  </button>
+  <button class="tab-item" onclick="switchPage(4)">
+    <span class="tab-icon">📅</span><span class="tab-label">日历</span>
+  </button>
+</div>
+
+<!-- ===== 模态框: 添加发布记录 ===== -->
+<div class="modal-overlay" id="publishModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalDate">添加发布记录</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="form-group">
+      <label>文章标题</label>
+      <input type="text" id="pubTitle" placeholder="输入文章标题">
+    </div>
+    <div class="form-group">
+      <label>发布状态</label>
+      <select id="pubStatus">
+        <option value="published">已发布</option>
+        <option value="planned">计划发布</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>文章链接（选填）</label>
+      <input type="text" id="pubLink" placeholder="公众号文章链接">
+    </div>
+    <div class="form-group">
+      <label>备注（选填）</label>
+      <input type="text" id="pubNote" placeholder="如：第X篇 / 数据反馈">
+    </div>
+    <button class="submit-btn" onclick="savePublishRecord()">保存记录</button>
+    <button class="submit-btn" id="deletePubBtn" style="background:var(--danger);margin-top:8px;display:none;" onclick="deletePublishRecord()">删除此记录</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===== 数据存储 ===== */
+const STORAGE = {
+  theme: 'dudu_theme',
+  topics: 'dudu_topics',
+  saved: 'dudu_saved',
+  dataRecords: 'dudu_data',
+  publishRecords: 'dudu_publish',
+  calDate: 'dudu_cal_date'
+};
+
+function getData(key, def) {
+  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : def; }
+  catch(e) { return def; }
+}
+function setData(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+/* ===== 主题切换 ===== */
+function toggleTheme() {
+  const html = document.documentElement;
+  const cur = html.getAttribute('data-theme') || 'light';
+  const next = cur === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  document.getElementById('themeBtn').textContent = next === 'light' ? '🌙' : '☀️';
+  document.querySelector('meta[name="theme-color"]').setAttribute('content', next === 'light' ? '#F5F3F0' : '#2B2B2B');
+  setData(STORAGE.theme, next);
+}
+(function initTheme() {
+  const saved = getData(STORAGE.theme, 'light');
+  document.documentElement.setAttribute('data-theme', saved);
+  document.getElementById('themeBtn').textContent = saved === 'light' ? '🌙' : '☀️';
+  document.querySelector('meta[name="theme-color"]').setAttribute('content', saved === 'light' ? '#F5F3F0' : '#2B2B2B');
+})();
+
+/* ===== 页面切换 ===== */
+const pageTitles = {
+  1: { title: '规划与方向', sub: '嘟嘟快跑 · 职场成长赛道' },
+  2: { title: '每日选题库', sub: '基于3大内容支柱智能推荐' },
+  3: { title: '数据分析', sub: '不吃鸭梨Caro_ · 运营数据' },
+  4: { title: '发布日历', sub: '不吃鸭梨Caro_ · 发布管理' }
+};
+function switchPage(num) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + num).classList.add('active');
+  document.querySelectorAll('.tab-item').forEach((t, i) => t.classList.toggle('active', i === num - 1));
+  document.getElementById('pageTitle').textContent = pageTitles[num].title;
+  document.getElementById('pageSub').textContent = pageTitles[num].sub;
+  window.scrollTo(0, 0);
+}
+
+/* ===== 模块2: 选题库 ===== */
+const topicTemplates = {
+  1: [ // 效率工具箱
+    { title: '每天少加2小时班：4个Excel技巧让领导以为你效率翻倍', angle: 'VLOOKUP、数据透视表、条件格式、快捷键组合，附操作截图和模板下载', type: 2 },
+    { title: '我用AI每天少干2小时活：5个职场场景直接抄作业', angle: '周报生成、PPT大纲、会议纪要、邮件回复、数据结论，附Prompt模板', type: 4 },
+    { title: '领导要的报表你做了一天？这套自动化流程20分钟搞定', angle: '从数据采集到格式化的全流程自动化方案，附模板', type: 2 },
+    { title: '别再手动整理数据了：3个Excel函数让你准时下班', angle: 'XLOOKUP、SUMIFS、INDEX+MATCH实战场景拆解', type: 2 },
+    { title: '你的PPT为什么总被领导打回？问题出在这5个细节', angle: '对齐、配色、逻辑线、数据呈现、动画使用的常见错误', type: 2 },
+    { title: '用Notion搭建个人工作台：从混乱到有序只要一个周末', angle: '任务管理、知识库、项目跟踪的模板搭建全流程', type: 4 },
+    { title: '同事5分钟做完的图表，你花了两小时？差距在这个工具', angle: '数据可视化工具对比+实操教程', type: 4 },
+    { title: '飞书/钉钉/企微的高阶用法，90%的人不知道', angle: '多维表格、自动化流程、机器人通知的隐藏功能', type: 4 },
+    { title: '一份好的周报长什么样？附3套模板直接套用', angle: '周报结构拆解：成果+数据+反思+计划，附模板', type: 4 },
+    { title: '用AI做竞品分析报告，从3天缩短到3小时', angle: '信息收集、对比框架、结论生成的AI辅助流程', type: 4 },
+    { title: 'Excel数据透视表入门：10分钟学会让领导惊艳的报表', angle: '从拖拽到筛选到计算字段的实战教程', type: 2 },
+    { title: '职场人必备的5个免费AI工具，替代付费软件', angle: '写作、设计、数据分析、PPT、翻译的免费替代方案', type: 4 },
+    { title: '你的邮箱每天100+未读？3步搭建邮件自动化处理系统', angle: '标签分类、自动过滤、模板回复的完整方案', type: 2 },
+    { title: '开会永远没结论？试试这套会议记录模板', angle: '会前准备、会中记录、会后跟进的结构化模板', type: 4 },
+    { title: '一键生成数据分析报告：这个AI工具比Excel强10倍', angle: '数据导入、自动分析、结论生成的全流程演示', type: 4 },
+    { title: '时间管理不是列清单：3个方法让你真正高效', angle: '番茄工作法、时间块、四象限法的实战应用', type: 2 },
+    { title: '用ChatGPT写工作方案，领导以为我花了三天', angle: '需求分析、框架生成、内容填充的Prompt技巧', type: 4 },
+    { title: '文件管理混乱？这套命名规则让你3秒找到任何文件', angle: '文件夹结构+命名规范的完整方案', type: 2 },
+  ],
+  2: [ // 认知升级
+    { title: '工作3年还在基层？不是你不够努力，是这3件事没人告诉你', angle: '把忙当有价值、只会干活不会汇报、舒适区待太久', type: 1 },
+    { title: '"领导更喜欢会拍马屁的人"——这是职场最大的误解', angle: '拍马屁vs向上管理的本质区别，3个实操方法', type: 3 },
+    { title: '月薪5千和月薪5万的人，差距到底在哪里？', angle: '不是能力差距，是认知杠杆的差异', type: 3 },
+    { title: '你以为的努力，可能只是低效的勤奋', angle: '区分战术勤奋和战略勤奋，找到高杠杆区', type: 3 },
+    { title: '为什么越听话的员工越不被重视？', angle: '服从≠价值，职场需要的是方案而非执行', type: 3 },
+    { title: '30岁前必须明白的5个职场真相，越早知道越好', angle: '关于选择、平台、人际、学习和健康', type: 1 },
+    { title: '"我很忙"是职场最危险的话', angle: '忙≠重要，忙碌可能意味着你不会管理优先级', type: 3 },
+    { title: '你不是不优秀，是太老实——职场"老实人"的3个困局', angle: '不会拒绝、不会邀功、不会站队的破局方法', type: 1 },
+    { title: '别等领导发现你的才华——学会主动曝光的3个方法', angle: '汇报、分享、跨部门协作中的曝光技巧', type: 3 },
+    { title: '为什么你越努力越焦虑？可能是搞反了因果关系', angle: '焦虑不是因为不够努力，是因为方向不确定', type: 3 },
+    { title: '跳槽涨薪30%的人，和留任涨薪5%的人，差在哪？', angle: '跳槽决策模型：什么时候该走，什么时候该留', type: 3 },
+    { title: '"我只是个执行者"——这句话正在毁掉你的职业', angle: '从执行者到决策者的思维转变路径', type: 3 },
+    { title: '你的工资不取决于你多努力，取决于你的不可替代性', angle: '如何构建个人职场护城河', type: 3 },
+    { title: '职场最大的谎言：是金子总会发光', angle: '金子也需要打磨和展示，被动等待=被遗忘', type: 3 },
+    { title: '35岁危机不是年龄问题，是认知问题', angle: '提前规划职业第二曲线的3个思路', type: 1 },
+    { title: '为什么能力差不多的人，三年后差距这么大？', angle: '平台选择、圈子质量、信息差的叠加效应', type: 3 },
+    { title: '工作前5年，比赚钱更重要的是建立这3种能力', angle: '结构化思维、数据分析、向上沟通', type: 1 },
+    { title: '你以为的稳定，可能是最大的风险', angle: '舒适区的伪装与突破策略', type: 3 },
+  ],
+  3: [ // 人际与沟通
+    { title: '领导给你安排了不属于你的活，高情商的人都是这样拒绝的', angle: '3个原则+4个实战话术模板', type: 5 },
+    { title: '跨部门协作总被推诿？3句话让对方主动配合你', angle: '利益绑定、目标对齐、进度透明的沟通策略', type: 5 },
+    { title: '向领导汇报工作，这3种说法让人最反感', angle: '只说问题不说方案、邀功式汇报、模糊表达', type: 5 },
+    { title: '同事总把活推给你？用这个方法优雅拒绝', angle: '不拒绝人只拒绝事，给替代方案的话术', type: 5 },
+    { title: '职场社交不是讨好：3个原则建立高质量人脉', angle: '价值交换、适度暴露、长期经营', type: 5 },
+    { title: '开会发言总被忽略？学会这3个表达框架', angle: '金字塔原理、PREP模型、STAR法则', type: 5 },
+    { title: '领导问"你觉得呢"，千万别随便回答', angle: '向上沟通的策略：先思考再回答的3层框架', type: 5 },
+    { title: '被同事背后说闲话怎么办？3步化解职场是非', angle: '不 confrontation、事实澄清、关系修复', type: 5 },
+    { title: '和领导意见不合，聪明人都用这个方式沟通', angle: '不直接反对，用数据+方案引导决策', type: 5 },
+    { title: '入职新团队，第一周做对这3件事就能站稳脚跟', angle: '观察文化、建立关系、小步证明', type: 5 },
+    { title: '你发的消息领导总不回？可能是表达方式有问题', angle: '向上沟通的消息模板：结论先行+选项+建议', type: 5 },
+    { title: '职场中，这3种忙绝对不能帮', angle: '替人背锅、越界帮忙、无底线救急', type: 5 },
+    { title: '如何在领导面前刷存在感，又不显得刻意？', angle: '日常汇报、会议发言、问题预判的自然曝光', type: 5 },
+    { title: '同事成了领导，你们的关系该怎么处？', angle: '角色转换、边界感、工作汇报的调整策略', type: 5 },
+    { title: '不讨好不讨好型人格：职场老好人的自救指南', angle: '识别讨好行为、建立边界、学会拒绝', type: 5 },
+    { title: '领导说"你看着办"，到底是几个意思？', angle: '解读领导真实意图的4种场景和应对', type: 5 },
+    { title: '饭局上不会说话？3个万能话题让你不再尴尬', angle: '职场社交场景的破冰和控场技巧', type: 5 },
+    { title: '绩效面谈被领导打了低分，高情商的应对方式', angle: '不争辩不认命，用数据和方案翻盘', type: 5 },
+  ]
+};
+
+const typeNames = { 1: '痛点共鸣', 2: '方法干货', 3: '认知颠覆', 4: '实用工具', 5: '人际关系' };
+const typeTagClass = { 1: 'tag-1', 2: 'tag-2', 3: 'tag-3', 4: 'tag-4', 5: 'tag-5' };
+const pillarNames = { 1: '🔧 效率工具箱', 2: '🧠 认知升级', 3: '🤝 人际与沟通' };
+
+function getRandomTopics() {
+  // 按占比分配：效率40% 认知35% 人际25% -> 5篇中约2+2+1
+  const distribution = [1, 1, 2, 2, 3];
+  const result = [];
+  const used = new Set();
+  // 打乱分布
+  distribution.sort(() => Math.random() - 0.5);
+  for (const pillar of distribution) {
+    const pool = topicTemplates[pillar];
+    let attempts = 0;
+    while (attempts < 20) {
+      const idx = Math.floor(Math.random() * pool.length);
+      const key = pillar + '-' + idx;
+      if (!used.has(key)) {
+        used.add(key);
+        result.push({ ...pool[idx], pillar });
+        break;
+      }
+      attempts++;
+    }
+  }
+  return result;
+}
+
+function renderTopics(topics) {
+  const container = document.getElementById('topicList');
+  container.innerHTML = topics.map((t, i) => `
+    <div class="topic-card" style="animation-delay:${i * 0.06}s">
+      <div class="tc-header">
+        <span class="tag ${typeTagClass[t.type]}">${typeNames[t.type]}</span>
+        <span class="tag tag-accent" style="font-size:10px;">${pillarNames[t.pillar]}</span>
+      </div>
+      <div class="tc-title">${t.title}</div>
+      <div class="tc-angle">${t.angle}</div>
+      <div class="tc-footer">
+        <span class="tc-pillar">建议字数：1800-2500字</span>
+        <button class="fav-btn" onclick="toggleFav(${i})" data-idx="${i}">☆</button>
+      </div>
+    </div>
+  `).join('');
+  // 标记已收藏的
+  const saved = getData(STORAGE.saved, []);
+  topics.forEach((t, i) => {
+    const isFav = saved.some(s => s.title === t.title);
+    if (isFav) {
+      const btn = document.querySelector(`.fav-btn[data-idx="${i}"]`);
+      if (btn) { btn.textContent = '★'; btn.classList.add('favored'); }
+    }
+  });
+  // 临时存储当前选题
+  setData(STORAGE.topics, topics);
+}
+
+function generateTopics() {
+  const topics = getRandomTopics();
+  renderTopics(topics);
+  showToast('已刷新5个新选题');
+}
+
+function toggleFav(idx) {
+  const topics = getData(STORAGE.topics, []);
+  const topic = topics[idx];
+  if (!topic) return;
+  let saved = getData(STORAGE.saved, []);
+  const existIdx = saved.findIndex(s => s.title === topic.title);
+  const btn = document.querySelector(`.fav-btn[data-idx="${idx}"]`);
+  if (existIdx >= 0) {
+    saved.splice(existIdx, 1);
+    if (btn) { btn.textContent = '☆'; btn.classList.remove('favored'); }
+    showToast('已取消收藏');
+  } else {
+    saved.unshift({ title: topic.title, type: topic.type, pillar: topic.pillar, angle: topic.angle, savedAt: Date.now() });
+    if (btn) { btn.textContent = '★'; btn.classList.add('favored'); }
+    showToast('已收藏选题');
+  }
+  setData(STORAGE.saved, saved);
+  renderSavedList();
+}
+
+function renderSavedList() {
+  const saved = getData(STORAGE.saved, []);
+  document.getElementById('savedCount').textContent = saved.length + ' 篇';
+  const container = document.getElementById('savedList');
+  if (saved.length === 0) {
+    container.innerHTML = '<div class="empty-state">点击选题卡片上的 ☆ 收藏</div>';
+    return;
+  }
+  container.innerHTML = saved.map((s, i) => `
+    <div class="saved-card">
+      <div class="sc-info">
+        <div class="sc-title">${s.title}</div>
+        <div class="sc-tags">
+          <span class="tag ${typeTagClass[s.type]}" style="font-size:10px;">${typeNames[s.type]}</span>
+          <span class="tag tag-accent" style="font-size:10px;">${pillarNames[s.pillar]}</span>
+        </div>
+      </div>
+      <button class="sc-delete" onclick="removeSaved(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function removeSaved(idx) {
+  let saved = getData(STORAGE.saved, []);
+  saved.splice(idx, 1);
+  setData(STORAGE.saved, saved);
+  renderSavedList();
+  // 刷新当前选题的收藏状态
+  const topics = getData(STORAGE.topics, []);
+  if (topics.length) renderTopics(topics);
+  showToast('已删除');
+}
+
+// 预置选题
+const presetTopics = [
+  { num: '第1篇', title: '工作3年还在基层？不是你不够努力，是这3件事没人告诉你', meta: '痛点共鸣型 · ~2000字' },
+  { num: '第2篇', title: '每天少加2小时班的秘密：4个Excel技巧让领导以为你效率翻倍', meta: '方法干货型 · ~2200字' },
+  { num: '第3篇', title: '"领导更喜欢会拍马屁的人"——这是职场最大的误解', meta: '认知颠覆型 · ~2000字' },
+  { num: '第4篇', title: '我用AI每天少干2小时活：5个职场场景直接抄作业', meta: '实用工具型 · ~2500字' },
+  { num: '第5篇', title: '领导给你安排了不属于你的活，高情商的人都是这样拒绝的', meta: '人际关系型 · ~2000字' },
+];
+function renderPresets() {
+  document.getElementById('presetList').innerHTML = presetTopics.map(p => `
+    <div class="preset-card">
+      <div class="pc-num">${p.num}</div>
+      <div class="pc-title">${p.title}</div>
+      <div class="pc-meta">${p.meta}</div>
+    </div>
+  `).join('');
+}
+
+/* ===== 模块3: 数据分析 ===== */
+// 示例数据
+const demoData = [
+  { date: '2026-07-30', reads: 2150, likes: 98, shares: 28, comments: 15, newFans: 18, totalFans: 820 },
+  { date: '2026-07-31', reads: 2680, likes: 120, shares: 35, comments: 22, newFans: 23, totalFans: 843 },
+  { date: '2026-08-01', reads: 2950, likes: 135, shares: 38, comments: 19, newFans: 25, totalFans: 868 },
+  { date: '2026-08-02', reads: 2410, likes: 110, shares: 30, comments: 16, newFans: 20, totalFans: 888 },
+  { date: '2026-08-03', reads: 3180, likes: 148, shares: 41, comments: 25, newFans: 28, totalFans: 916 },
+  { date: '2026-08-04', reads: 2890, likes: 161, shares: 46, comments: 21, newFans: 25, totalFans: 941 },
+  { date: '2026-08-05', reads: 3241, likes: 156, shares: 43, comments: 18, newFans: 27, totalFans: 968 },
+];
+
+function getChartData(days) {
+  const data = getData(STORAGE.dataRecords, demoData);
+  const sorted = [...data].sort((a, b) => a.date.localeCompare(b.date));
+  return sorted.slice(-days);
+}
+
+function renderTrendChart(days) {
+  const data = getChartData(days);
+  const svg = document.getElementById('trendChart');
+  if (data.length < 2) { svg.innerHTML = '<text x="160" y="70" text-anchor="middle" fill="var(--text-tertiary)" font-size="12">暂无足够数据</text>'; return; }
+
+  const w = 320, h = 140, pad = { l: 30, r: 15, t: 15, b: 25 };
+  const cw = w - pad.l - pad.r, ch = h - pad.t - pad.b;
+  const maxVal = Math.max(...data.map(d => d.reads)) * 1.1;
+  const minVal = Math.min(...data.map(d => d.reads)) * 0.9;
+  const range = maxVal - minVal || 1;
+
+  const points = data.map((d, i) => ({
+    x: pad.l + (cw / (data.length - 1)) * i,
+    y: pad.t + ch - ((d.reads - minVal) / range) * ch,
+    val: d.reads,
+    date: d.date
+  }));
+
+  const pathD = points.map((p, i) => (i === 0 ? 'M' : 'L') + p.x.toFixed(1) + ',' + p.y.toFixed(1)).join(' ');
+  const areaD = pathD + ` L${points[points.length-1].x.toFixed(1)},${(pad.t+ch).toFixed(1)} L${points[0].x.toFixed(1)},${(pad.t+ch).toFixed(1)} Z`;
+
+  // Y轴标签
+  const yLabels = [maxVal, (maxVal+minVal)/2, minVal].map(v => Math.round(v));
+
+  let html = '';
+  // 网格线
+  yLabels.forEach((v, i) => {
+    const y = pad.t + (ch / 2) * i;
+    html += `<line x1="${pad.l}" y1="${y}" x2="${w-pad.r}" y2="${y}" stroke="var(--border)" stroke-dasharray="2,3" stroke-width="0.5"/>`;
+    html += `<text x="${pad.l-4}" y="${y+3}" text-anchor="end" fill="var(--text-tertiary)" font-size="9">${v}</text>`;
+  });
+
+  // 渐变区域
+  html += `<defs><linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--accent)" stop-opacity="0.2"/><stop offset="100%" stop-color="var(--accent)" stop-opacity="0.02"/></linearGradient></defs>`;
+  html += `<path d="${areaD}" fill="url(#areaGrad)"/>`;
+  // 折线
+  html += `<path d="${pathD}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
+  // 数据点
+  points.forEach(p => {
+    html += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3" fill="var(--card-bg)" stroke="var(--accent)" stroke-width="1.5"/>`;
+  });
+  // X轴标签（首尾和中间）
+  const labelIdx = [0, Math.floor((data.length-1)/2), data.length-1];
+  labelIdx.forEach(i => {
+    if (data[i]) {
+      const d = data[i].date.slice(5);
+      const x = pad.l + (cw / (data.length - 1)) * i;
+      html += `<text x="${x}" y="${h-6}" text-anchor="middle" fill="var(--text-tertiary)" font-size="9">${d}</text>`;
+    }
+  });
+
+  svg.innerHTML = html;
+}
+
+function switchChart(btn, days) {
+  btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTrendChart(days);
+}
+
+function updateMetrics() {
+  const data = getData(STORAGE.dataRecords, demoData);
+  if (data.length === 0) return;
+  const sorted = [...data].sort((a, b) => a.date.localeCompare(b.date));
+  const today = sorted[sorted.length - 1];
+  const yesterday = sorted[sorted.length - 2] || today;
+
+  document.getElementById('metricReads').textContent = today.reads.toLocaleString();
+  document.getElementById('metricFans').textContent = '+' + today.newFans;
+  document.getElementById('metricLikes').textContent = today.likes;
+  document.getElementById('metricShares').textContent = today.shares;
+
+  const calcChange = (cur, prev) => {
+    if (prev === 0) return 0;
+    return ((cur - prev) / prev * 100).toFixed(1);
+  };
+
+  const setChange = (id, cur, prev) => {
+    const el = document.getElementById(id);
+    const pct = calcChange(cur, prev);
+    if (pct > 0) { el.className = 'mc-change up'; el.textContent = `↑ ${pct}% 较昨日`; }
+    else if (pct < 0) { el.className = 'mc-change down'; el.textContent = `↓ ${Math.abs(pct)}% 较昨日`; }
+    else { el.className = 'mc-change flat'; el.textContent = '— 持平'; }
+  };
+
+  setChange('metricReadsChange', today.reads, yesterday.reads);
+  setChange('metricFansChange', today.newFans, yesterday.newFans);
+  setChange('metricLikesChange', today.likes, yesterday.likes);
+  setChange('metricSharesChange', today.shares, yesterday.shares);
+}
+
+function addDataRecord() {
+  const date = document.getElementById('dataDate').value;
+  if (!date) { showToast('请选择日期'); return; }
+  const record = {
+    date,
+    reads: parseInt(document.getElementById('dataReads').value) || 0,
+    likes: parseInt(document.getElementById('dataLikes').value) || 0,
+    shares: parseInt(document.getElementById('dataShares').value) || 0,
+    comments: parseInt(document.getElementById('dataComments').value) || 0,
+    newFans: parseInt(document.getElementById('dataNewFans').value) || 0,
+    totalFans: parseInt(document.getElementById('dataTotalFans').value) || 0,
+  };
+  let data = getData(STORAGE.dataRecords, []);
+  // 去重：同日期覆盖
+  data = data.filter(d => d.date !== date);
+  data.push(record);
+  setData(STORAGE.dataRecords, data);
+  // 清空输入
+  ['dataReads','dataLikes','dataShares','dataComments','dataNewFans','dataTotalFans'].forEach(id => document.getElementById(id).value = '');
+  updateMetrics();
+  renderTrendChart(7);
+  renderDataTable();
+  showToast('数据已保存');
+}
+
+function renderDataTable() {
+  const data = getData(STORAGE.dataRecords, demoData);
+  const sorted = [...data].sort((a, b) => b.date.localeCompare(a.date));
+  const tbody = document.getElementById('dataTableBody');
+  if (sorted.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-tertiary);padding:20px;">暂无数据</td></tr>';
+    return;
+  }
+  tbody.innerHTML = sorted.map((d, i) => `
+    <tr>
+      <td>${d.date.slice(5)}</td>
+      <td>${d.reads.toLocaleString()}</td>
+      <td>${d.likes}</td>
+      <td>${d.shares}</td>
+      <td>+${d.newFans}</td>
+      <td><button class="del-btn" onclick="deleteDataRecord('${d.date}')">🗑</button></td>
+    </tr>
+  `).join('');
+}
+
+function deleteDataRecord(date) {
+  let data = getData(STORAGE.dataRecords, []);
+  data = data.filter(d => d.date !== date);
+  setData(STORAGE.dataRecords, data);
+  updateMetrics();
+  renderTrendChart(7);
+  renderDataTable();
+  showToast('已删除');
+}
+
+/* ===== 模块4: 发布日历 ===== */
+let calCurrent = new Date();
+
+function renderCalendar() {
+  const year = calCurrent.getFullYear();
+  const month = calCurrent.getMonth();
+  document.getElementById('calTitle').textContent = `${year}年${month + 1}月`;
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const prevMonthDays = new Date(year, month, 0).getDate();
+
+  const records = getData(STORAGE.publishRecords, []);
+  const today = new Date();
+  const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
+
+  let html = '';
+  // 上月填充
+  for (let i = firstDay - 1; i >= 0; i--) {
+    html += `<div class="cal-day other-month"><span class="day-num">${prevMonthDays - i}</span></div>`;
+  }
+  // 本月
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    const rec = records.find(r => r.date === dateStr);
+    let dotClass = '';
+    let todayClass = '';
+    if (rec) {
+      dotClass = rec.status === 'published' ? 'published' : 'planned';
+    }
+    if (isCurrentMonth && d === today.getDate()) todayClass = 'today';
+    html += `<div class="cal-day ${todayClass}" onclick="openPublishModal('${dateStr}')">
+      <span class="day-num">${d}</span>
+      ${dotClass ? `<div class="dot ${dotClass}"></div>` : ''}
+    </div>`;
+  }
+  // 下月填充
+  const totalCells = firstDay + daysInMonth;
+  const remaining = (7 - (totalCells % 7)) % 7;
+  for (let i = 1; i <= remaining; i++) {
+    html += `<div class="cal-day other-month"><span class="day-num">${i}</span></div>`;
+  }
+
+  document.getElementById('calDays').innerHTML = html;
+  renderCalendarStats();
+  renderPublishList();
+}
+
+function renderCalendarStats() {
+  const records = getData(STORAGE.publishRecords, []);
+  const year = calCurrent.getFullYear();
+  const month = calCurrent.getMonth();
+  const monthRecords = records.filter(r => {
+    const d = new Date(r.date);
+    return d.getFullYear() === year && d.getMonth() === month;
+  });
+  const published = monthRecords.filter(r => r.status === 'published').length;
+  const planned = monthRecords.filter(r => r.status === 'planned').length;
+  const totalPub = records.filter(r => r.status === 'published').length;
+  document.getElementById('monthPublished').textContent = published;
+  document.getElementById('monthPlanned').textContent = planned;
+  document.getElementById('totalPublished').textContent = totalPub;
+}
+
+function changeMonth(delta) {
+  calCurrent.setMonth(calCurrent.getMonth() + delta);
+  renderCalendar();
+}
+
+let modalDate = '';
+function openPublishModal(dateStr) {
+  modalDate = dateStr;
+  document.getElementById('modalDate').textContent = `${dateStr} 发布记录`;
+  const records = getData(STORAGE.publishRecords, []);
+  const rec = records.find(r => r.date === dateStr);
+  if (rec) {
+    document.getElementById('pubTitle').value = rec.title || '';
+    document.getElementById('pubStatus').value = rec.status || 'published';
+    document.getElementById('pubLink').value = rec.link || '';
+    document.getElementById('pubNote').value = rec.note || '';
+    document.getElementById('deletePubBtn').style.display = 'block';
+  } else {
+    document.getElementById('pubTitle').value = '';
+    document.getElementById('pubStatus').value = 'published';
+    document.getElementById('pubLink').value = '';
+    document.getElementById('pubNote').value = '';
+    document.getElementById('deletePubBtn').style.display = 'none';
+  }
+  document.getElementById('publishModal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('publishModal').classList.remove('show');
+}
+
+function savePublishRecord() {
+  const title = document.getElementById('pubTitle').value.trim();
+  if (!title) { showToast('请输入文章标题'); return; }
+  const record = {
+    date: modalDate,
+    title,
+    status: document.getElementById('pubStatus').value,
+    link: document.getElementById('pubLink').value.trim(),
+    note: document.getElementById('pubNote').value.trim(),
+  };
+  let records = getData(STORAGE.publishRecords, []);
+  const idx = records.findIndex(r => r.date === modalDate);
+  if (idx >= 0) records[idx] = record;
+  else records.push(record);
+  setData(STORAGE.publishRecords, records);
+  closeModal();
+  renderCalendar();
+  showToast('发布记录已保存');
+}
+
+function deletePublishRecord() {
+  let records = getData(STORAGE.publishRecords, []);
+  records = records.filter(r => r.date !== modalDate);
+  setData(STORAGE.publishRecords, records);
+  closeModal();
+  renderCalendar();
+  showToast('已删除');
+}
+
+function renderPublishList() {
+  const records = getData(STORAGE.publishRecords, []);
+  const year = calCurrent.getFullYear();
+  const month = calCurrent.getMonth();
+  const monthRecords = records
+    .filter(r => {
+      const d = new Date(r.date);
+      return d.getFullYear() === year && d.getMonth() === month;
+    })
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  const container = document.getElementById('publishList');
+  const empty = document.getElementById('publishEmpty');
+
+  if (monthRecords.length === 0) {
+    container.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+  container.innerHTML = monthRecords.map(r => `
+    <div class="publish-record">
+      <div class="pr-header">
+        <span class="tag ${r.status === 'published' ? 'tag-1' : 'tag-2'}" style="font-size:10px;">${r.status === 'published' ? '已发布' : '计划中'}</span>
+        <span class="pr-date">${r.date.slice(5)}</span>
+      </div>
+      <div class="pr-title">${r.title}</div>
+      ${r.link ? `<div class="pr-link">${r.link}</div>` : ''}
+      ${r.note ? `<div class="pr-note">📝 ${r.note}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+/* ===== 初始化 ===== */
+function init() {
+  // 选题库
+  const existing = getData(STORAGE.topics, []);
+  if (existing.length > 0) renderTopics(existing);
+  else generateTopics();
+  renderSavedList();
+  renderPresets();
+
+  // 数据分析
+  document.getElementById('dataDate').value = new Date().toISOString().slice(0, 10);
+  updateMetrics();
+  renderTrendChart(7);
+  renderDataTable();
+
+  // 发布日历
+  renderCalendar();
+
+  // 点击模态框外部关闭
+  document.getElementById('publishModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+}
+
+init();
+</script>
+</body>
+</html>
